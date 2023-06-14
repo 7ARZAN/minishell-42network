@@ -6,14 +6,14 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:13:04 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/13 18:26:39 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/14 03:43:53 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_H
 # define PARSER_H
 
-//# include "libft.h"
+# include "libft/libft.h"
 # include <fcntl.h>
 # include <stdio.h>
 # include <stdlib.h>

@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:00:07 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/13 18:30:35 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/14 05:49:49 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,10 @@ int	check_quotes(char *str)
 	{
 		if (is_quote(str[i]))
 		{
-			if (!quote_closed(str, i))
-				return (write(2, "Unmatched quote\n", 16), 0);
+			if (quote_closed(str, i) == 0)
+				return (write(2, "quotes are not closed\n", 22), 0);
 			i = quote_len(str, i);
+
 		}
 		i++;
 	}
