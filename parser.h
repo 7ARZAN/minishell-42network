@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:13:04 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/14 03:43:53 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/15 08:59:18 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,18 @@
 # include <stdlib.h>
 # include <unistd.h>
 
+typedef struct	s_redir
+{
+	char	**redir_files;
+	char	**redir_type;
+}				t_redir;
+
 typedef struct	s_cmd
 {
 	char	*cmd;
 	char	**args;
-	char	**redir_files;
-	char	**redir_type;
-	char	*del;
+	t_redir	*redir;
+	char	*sep;
 	int	error;
 	struct s_cmd	*next;
 }				t_cmd;
@@ -37,5 +42,6 @@ int	quote_closed(char *str, int i);
 int	is_quote(char c);
 int	quote_type(char c);
 int	quote_len(char *str, int i);
+int	remove_quotes(char *str);
 
 #endif

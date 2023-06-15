@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/14 05:50:58 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/15 08:33:03 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static char	*next_arg(char *cmd)
 	i = 0;
 	while (cmd && !ft_strchr(" \t|><", cmd[i]))
 	{
-		if (cmd[i] == '\'' || cmd[i] == '\"')
+		if (ft_strchr("\"\'", cmd[i]))
 			i = quote_len(cmd, i);
 		i++;
 	}
@@ -63,22 +63,17 @@ char	**split_args(char *cmd)
 	args = ft_calloc(counter(cmd) + 1, sizeof(char *));
 	while (cmd && cmd[i])
 	{
-		if (ft_strchr("><", cmd[i]))
-		{
-			while (ft_strchr("><", cmd[i]))
-				i++;
-			j--;
-		}
-		else if (!ft_strchr(" \t|", cmd[i]))
+		while (cmd[i] && ft_strchr(" \t", cmd[i]))
+			i++;
+		if (cmd[i] && !ft_strchr("><", cmd[i]))
 		{
 			args[j] = ft_substr(cmd, i, next_arg(cmd + i) - cmd - i);
 			i += next_arg(cmd + i) - cmd - i;
 			j++;
 		}
-		else
+		else if (cmd[i] && ft_strchr("><", cmd[i]))
 			i++;
 	}
-	args[j] = NULL;
 	return (args);
 }
 
