@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/16 12:38:23 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/16 16:06:22 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static char	*next_arg(char *cmd)
 	int	i;
 
 	i = 0;
-	while (cmd && !ft_strchr(" \t|><", cmd[i]))
+	while (cmd && !ft_strchr(" \t><", cmd[i]))
 	{
 		if (ft_strchr("\"\'", cmd[i]))
 		{
@@ -84,6 +84,7 @@ char	**split_args(char *cmd)
 			j++;
 		}
 	}
+	args[j] = NULL;
 	return (args);
 }
 
@@ -96,8 +97,8 @@ int	main(int ac, char **av)
 	args = split_args(av[1]);
 	while (args[i])
 	{
-		printf("args[%i]:%s\n", i, args[i]);
-		printf("redir:%i\n", is_redir(args[i]));
+		printf("args[%i]:\t'%s'\n", i, args[i]);
+		printf("redir:\t[%i]\n", is_redir(args[i]));
 		i++;
 	}
 	return (0);
