@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/15 08:33:03 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/16 10:48:53 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static char	*next_arg(char *cmd)
 	while (cmd && !ft_strchr(" \t|><", cmd[i]))
 	{
 		if (ft_strchr("\"\'", cmd[i]))
-			i = quote_len(cmd, i);
+				i = quote_len(cmd, i);
 		i++;
 	}
 	return (cmd + i);
@@ -33,7 +33,7 @@ static int	counter(char *cmd)
 
 	i = 0;
 	count = 0;
-	while (cmd[i])
+	while (cmd && cmd[i])
 	{
 		if (ft_strchr("><", cmd[i]))
 		{

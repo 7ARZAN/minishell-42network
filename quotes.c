@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:00:07 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/14 05:49:49 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/16 10:44:14 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	quote_len(char *str, int i)
 
 	type = quote_type(str[i]);
 	i++;
-	while (str[i] && quote_type(str[i]) != type)
+	while (str[i] && quote_type(str[i]) != type && quote_closed(str, i))
 		i++;
 	return (i);
 }

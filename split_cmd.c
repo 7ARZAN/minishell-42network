@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/15 09:04:15 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/16 10:54:48 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,13 @@ int	wd_counts(char *input)
 	return (count + 1);
 }
 
-t_cmd	*add_cmd(t_cmd *cmd, char *input, int *error)
+t_cmd	*add_cmd(t_cmd *cmd, char *input)
 {
 	t_cmd	*new;
 	t_cmd	*tmp;
 
-	new = malloc(sizeof(t_cmd));
-	if (!new)
-		return (NULL);
-	new->cmd = ft_strdup(input);
+	new = (t_cmd *)malloc(sizeof(t_cmd));
+	new->cmd = input;
 	new->next = NULL;
 	if (!cmd)
 		return (new);
@@ -60,6 +58,7 @@ t_cmd	*add_cmd(t_cmd *cmd, char *input, int *error)
 	tmp->next = new;
 	return (cmd);
 }
+
 t_cmd	*split_cmd(char *input, int *error)
 {
 	int	i;
@@ -71,7 +70,16 @@ t_cmd	*split_cmd(char *input, int *error)
 	while (input[i])
 	{
 		tmp = ft_substr(input, i, ft_strlen(input));
-		cmd = add_cmd(cmd, tmp, error);
+		if (check_separator(tmp))
+		{
+			cmd = add_cmd(cmd, ft_substr(tmp, 0, ft_strchr(tmp, '|') - tmp));
+			i += ft_strchr(tmp, '|') - tmp + 1;
+		}
+		else
+		{
+			cmd = add_cmd(cmd, ft_substr(tmp, 0, ft_strlen(tmp)));
+			i += ft_strlen(tmp);
+		}
 	}
 	return (cmd);
 }
