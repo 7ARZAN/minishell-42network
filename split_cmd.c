@@ -6,13 +6,13 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/16 10:54:48 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/16 15:25:13 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-int	check_separator(char *input)
+static int	check_separator(char *input)
 {
 	int	i;
 
@@ -26,7 +26,7 @@ int	check_separator(char *input)
 	return (0);
 }
 
-int	wd_counts(char *input)
+static int	words_count(char *input)
 {
 	int	i;
 	int	count;
