@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/16 16:06:22 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/16 17:53:38 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,12 @@ static char	*next_arg(char *cmd)
 static int	is_redir(char *arg)
 {
 	if (ft_strchr("><", arg[0]))
-		return (1);
+	{
+		while (arg && ft_strchr(" \t", *arg))
+			arg++;
+		if (arg && ft_strchr("><", *arg))
+			return (1);
+	}
 	return (0);
 }
 
@@ -52,10 +57,10 @@ static int	counter(char *cmd)
 			count++;
 			i += next_arg(cmd + i) - cmd - i;
 		}
-		else if (cmd[i] && ft_strchr("><", cmd[i]))
+		else
 			i++;
 	}
-	return (count);
+	return (count + 1);
 }
 
 char	**split_args(char *cmd)
@@ -66,7 +71,7 @@ char	**split_args(char *cmd)
 
 	i = 0;
 	j = 0;
-	args = ft_calloc(counter(cmd) + 1, sizeof(char *));
+	args = ft_calloc(counter(cmd), sizeof(char *));
 	while (cmd && cmd[i])
 	{
 		while (cmd[i] && ft_strchr(" \t", cmd[i]))
