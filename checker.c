@@ -6,92 +6,113 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:56:11 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/16 11:05:10 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/16 19:31:43 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-static void	ft_perror(char *str)
+static char	*next_redir(char *str)
 {
-	ft_putstr_fd("mish: syntax error near unexpected token `", 2);
-	ft_putstr_fd(str, 2);
-	ft_putstr_fd("'\n", 2);
+	while (*str && *str != '>' && *str != '<')
+		str++;
+	return (str);
 }
 
-static char	*take_sep(char *str)
+static int	skip_spaces(char *str)
 {
 	int	i;
-	int	j;
-	char	*sep;
+
+	i = 0;
+	while (str[i] && ft_strchr(" \t", str[i]))
+		i++;
+	return (i);
+}
+
+static char	*extract_redir(char *str)
+{
+	int		i;
+	int		j;
+	char	*redir;
 
 	i = 0;
 	j = 0;
-	sep = (char *)malloc(sizeof(char) * 3);
-	while (str[i] && str[i] == ' ')
+	while (str[i] && ft_strchr("><", str[i]))
 		i++;
-	while (str[i] && str[i] != ' ')
-	{
-		sep[j] = str[i];
+	while (str[i] && ft_strchr(" \t", str[i]))
 		i++;
+	while (str[i + j] && !ft_strchr(" \t><", str[i + j]))
 		j++;
-	}
-	sep[j] = '\0';
-	return (sep);
+	redir = ft_substr(str, i, j);
+	return (redir);
 }
 
-int	checker(char *str)
+static int	redir_count(char *cmd)
 {
 	int	i;
-	char	*sep;
+	int	count;
 
+	cmd = next_redir(cmd);
 	i = 0;
-	while (str && str[i])
+	count = 0;
+	while (cmd[i])
 	{
-		sep = take_sep(str + i);
-		if (!ft_strcmp(sep, ">>") || !ft_strcmp(sep, "<<") || !ft_strcmp(sep, ">") || !ft_strcmp(sep, "<") || !ft_strcmp(sep, "|"))
-			return (1);
-		i += ft_strlen(sep);
-		free(sep);
-	}
-	return (0);
-}
-
-int main(int ac, char **av)
-{
-	int	fd;
-	char	*line;
-	char	*str;
-	int	i;
-
-	i = 0;
-	if (ac == 1)
-	{
-		while (1)
+		count++;
+		if (ft_strchr("><", cmd[i]))
 		{
-			read(0, &line, 1);
-			if (!line)
+			while (cmd[i] && ft_strchr("><", cmd[i]))
+				i++;
+			while (cmd[i] && ft_strchr(" \t", cmd[i]))
+				i++;
+			if (cmd[i] == '\0')
+				return (count);
+		}
+		i++;
+		cmd = next_redir(cmd + i);
+	}
+	return (count);
+}
+
+char	**get_redir(char *cmd)
+{
+	int		i;
+	int		j;
+	int		count;
+	char	**redir;
+
+	i = 0;
+	j = 0;
+	count = redir_count(cmd);
+	redir = (char **)malloc(sizeof(char *) * (count + 1));
+	while (cmd[i])
+	{
+		if (ft_strchr("><", cmd[i]))
+		{
+			redir[j] = extract_redir(cmd + i);
+			j++;
+			while (cmd[i] && ft_strchr("><", cmd[i]))
+				i++;
+			while (cmd[i] && ft_strchr(" \t", cmd[i]))
+				i++;
+			if (cmd[i] == '\0')
 				break ;
-			str = ft_strjoin(str, line);
-			free(line);
 		}
-		if (checker(str))
-			ft_perror("syntax error near unexpected token\n");
+		i++;
 	}
-	else if (ac == 2)
+	redir[j] = NULL;
+	return (redir);
+}
+
+//the objectif of this file is to check if the redirections are well parsed and extracted from the command line
+int main()
+{
+	char *cmd = "ls -l > file2 < file1 >> file3";
+	char **redir = get_redir(cmd);
+	int i = 0;
+	while (redir[i])
 	{
-		fd = open(av[1], O_RDONLY);
-		if (fd == -1)
-			ft_perror("No such file or directory\n");
-		while (read(fd, &line, 1))
-		{
-			str = ft_strjoin(str, line);
-			free(line);
-		}
-		if (checker(str))
-			ft_perror("syntax error near unexpected token\n");
+		printf("%s\n", redir[i]);
+		i++;
 	}
-	else
-		ft_perror("Too many arguments\n");
 	return (0);
 }
