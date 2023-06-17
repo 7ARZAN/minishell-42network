@@ -6,22 +6,42 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/16 15:25:13 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/18 00:16:18 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-static int	check_separator(char *input)
+static int	check_quotes_loop(char *str)
 {
 	int	i;
+	int	sq;
+	int	dq;
 
 	i = 0;
-	while (input[i])
+	sq = 0;
+	dq = 0;
+	while (str[i])
 	{
-		if (input[i] == '|')
-			return (1);
+		if (str[i] == '\'' && !dq)
+			sq = !sq;
+		if (str[i] == '\"' && !sq)
+			dq = !dq;
 		i++;
+	}
+	return (sq || dq);
+}
+
+static int	check_quoted(t_cmd *cmd)
+{
+	while (cmd)
+	{
+		if (check_quotes_loop(cmd->cmd))
+		{
+			ft_putstr_fd("mish: Warning: quotes not closed\n", 2);
+			return (1);
+		}
+		cmd = cmd->next;
 	}
 	return (0);
 }
@@ -69,18 +89,18 @@ t_cmd	*split_cmd(char *input, int *error)
 	cmd = NULL;
 	while (input[i])
 	{
-		tmp = ft_substr(input, i, ft_strlen(input));
-		if (check_separator(tmp))
+		if (input[i] == '|')
 		{
-			cmd = add_cmd(cmd, ft_substr(tmp, 0, ft_strchr(tmp, '|') - tmp));
-			i += ft_strchr(tmp, '|') - tmp + 1;
+			tmp = ft_substr(input, 0, i);
+			cmd = add_cmd(cmd, tmp);
+			input = input + i + 1;
+			i = 0;
 		}
-		else
-		{
-			cmd = add_cmd(cmd, ft_substr(tmp, 0, ft_strlen(tmp)));
-			i += ft_strlen(tmp);
-		}
+		i++;
 	}
+	cmd = add_cmd(cmd, input);
+	if (check_quoted(cmd))
+		*error = 1;
 	return (cmd);
 }
 
@@ -90,13 +110,11 @@ int	main(int ac, char **av)
 	int	error;
 
 	error = 0;
-	cmd = split_cmd(av[1], &error);
-	if (error)
-		printf("error\n");
-	while (cmd)
+	if (ac == 2)
 	{
-		printf("%s\n", cmd->cmd);
-		cmd = cmd->next;
+		cmd = split_cmd(av[1], &error);
+		if (!error)
+			printf("%s\n", cmd->cmd);
 	}
 	return (0);
 }

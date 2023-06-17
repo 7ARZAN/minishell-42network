@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/16 17:53:38 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/16 22:20:36 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,7 @@ static char	*next_arg(char *cmd)
 	while (cmd && !ft_strchr(" \t><", cmd[i]))
 	{
 		if (ft_strchr("\"\'", cmd[i]))
-		{
-			skip_quotes(cmd, i);
 			i = quote_len(cmd, i);
-		}
 		i++;
 	}
 	return (cmd + i);
