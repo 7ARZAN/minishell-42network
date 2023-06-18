@@ -6,65 +6,155 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/18 03:25:39 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/18 06:57:28 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
+// static char	*next_arg(char *cmd)
+// {
+// 	int	i;
+// 	int	sq;
+// 	int	dq;
+//
+// 	i = 0;
+// 	sq = 0;
+// 	dq = 0;
+// 	while (cmd[i] && (cmd[i] != ' ' || sq || dq))
+// 	{
+// 		if (cmd[i] == '\'' && !dq)
+// 			sq = !sq;
+// 		else if (cmd[i] == '\"' && !sq)
+// 			dq = !dq;
+// 		i++;
+// 	}
+// 	return (cmd + i);
+// }
+//
+// static int	counter(char *cmd)
+// {
+// 	int	i;
+// 	int	count;
+//
+// 	i = 0;
+// 	count = 0;
+// 	while (cmd && *cmd)
+// 	{
+// 		if (ft_strchr("<>", *cmd))
+// 		{
+// 			while (ft_strchr("<>", *cmd))
+// 				cmd++;
+// 			continue ;
+// 		}
+// 		else if (ft_strchr(" \t", *cmd))
+// 		{
+// 			cmd = next_arg(cmd);
+// 			continue ;
+// 		}
+// 		cmd = next_arg(cmd);
+// 		count++;
+// 	}
+// 	return (count);
+// }
+//
+// char	**split_args(char *cmd)
+// {
+// 	char	**args;
+// 	char	*tmp;
+// 	int	i;
+//
+// 	i = 0;
+// 	args = ft_calloc(counter(cmd) + 1, sizeof(char *));
+// 	while (cmd && *cmd)
+// 	{
+// 		if (ft_strchr("<>", *cmd))
+// 		{
+// 			while (ft_strchr("<>", *cmd))
+// 				cmd++;
+// 			continue ;
+// 		}
+// 		else if (ft_strchr(" \t", *cmd))
+// 		{
+// 			cmd = next_arg(cmd);
+// 			continue ;
+// 		}
+// 		tmp = next_arg(cmd);
+// 		args[i] = ft_strndup(cmd, tmp - cmd);
+// 		cmd = tmp;
+// 		i++;
+// 	}
+// 	args[i] = NULL;
+// 	return (args);
+// }
+
 static char	*next_arg(char *cmd)
 {
-	int	i;
-	int	sq;
-	int	dq;
+	int	dquotes;
+	int	squotes;
 
-	i = 0;
-	sq = 0;
-	dq = 0;
-	while (cmd && !ft_strchr(" \t><", cmd[i]))
+	dquotes = 0;
+	squotes = 0;
+	while (!ft_strchr("\t ><|;", cmd[0]) || ((dquotes & 1) || (squotes & 1)))
 	{
-		if (cmd[i] == '\'' && !dq)
-			sq = !sq;
-		else if (cmd[i] == '\"' && !sq)
-			dq = !dq;
-		i++;
+		dquotes += (!(squotes & 1) && cmd[0] == '"');
+		squotes += (!(dquotes & 1) && cmd[0] == '\'');
+		cmd++;
 	}
-	return (cmd + i);
+	return (cmd);
 }
 
-static int	counter(char *cmd)
+static int	args_count(char *cmd)
 {
-	int	i;
 	int	count;
 
-	i = 0;
 	count = 0;
-	while (cmd && cmd[i])
+	while (cmd[0])
 	{
-		while (cmd[i] && ft_strchr(" \t", cmd[i]))
-			i++;
-		if (cmd[i] && !ft_strchr("><", cmd[i]))
+		if (ft_strchr("><", cmd[0]))
+		{
+			while (ft_strchr("><", cmd[0]))
+				cmd++;
+			count--;
+		}
+		else if (!ft_strchr("\t |;", cmd[0]))
 		{
 			count++;
-			i += next_arg(cmd + i) - cmd - i;
+			cmd = next_arg(cmd);
 		}
 		else
-			i++;
+			cmd++;
 	}
-	return (count + 1);
+	return (count);
 }
 
-char	**split_args(char *cmd)
+char	**parse_args(char *cmd)
 {
-	char	**args;
-	int		i;
-	int		j;
+	int		index;
+	int		count;
+	char	*tmp;
+	char	**result;
 
-	i = 0;
-	j = 0;
-	args = ft_calloc(counter(cmd), sizeof(char *));
-	while (cmd && cmd[i])
+	index = 0;
+	count = args_count(cmd);
+	result = ft_calloc(count + 1, sizeof(char *));
+	while (index < count)
 	{
+		while (cmd[0] && ft_strchr("\t ", cmd[0]))
+			cmd++;
+		if (ft_strchr("><", cmd[0]))
+			while (ft_strchr("\t ><", cmd[0]))
+				cmd++;
+		else
+		{
+			tmp = ft_substr(cmd, 0,
+					(ft_strlen(cmd) - ft_strlen(next_arg(cmd))));
+			result[index++] = tmp;
+		}
+		cmd = next_arg(cmd);
+	}
+	result[index] = NULL;
+	return (result);
 }
 
 int	main(int ac, char **av)
@@ -73,8 +163,9 @@ int	main(int ac, char **av)
 	int		i;
 
 	i = 0;
-	args = split_args(av[1]);
-	while (args[i])
+	args = parse_args(av[1]);
+	printf("here is the cmd:\t\"%s\"\n", av[1]);
+	while (args[i] != NULL)
 	{
 		printf("here is the arg [%d]:\t\"%s\"\n", i, args[i]);
 		i++;
