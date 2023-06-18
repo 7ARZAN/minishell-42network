@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/18 03:16:49 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/18 04:02:12 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,25 +41,34 @@ static int	check_quoted(t_cmd *cmd)
 			ft_putstr_fd("mish: Warning: quotes not closed\n", 2);
 			return (1);
 		}
-		cmd = cmd->next;
+		if (!cmd->next)
+			break ;
+		else
+			cmd = cmd->next;
 	}
 	return (0);
 }
 
 static int	words_count(char *input)
 {
-	int	i;
-	int	count;
 
-	i = 0;
-	count = 0;
-	while (input[i])
+		int	length;
+	int	dquotes;
+	int	squotes;
+
+	length = 0;
+	dquotes = 0;
+	squotes = 0;
+	while (input && input[0])
 	{
-		if (input[i] == '|')
-			count++;
-		i++;
+		length++;
+		if (ft_strchr("|", input[0]) && (!(dquotes & 1) && !(squotes & 1)))
+			return (length);
+		dquotes += (!(squotes & 1) && input[0] == '"');
+		squotes += (!(dquotes & 1) && input[0] == '\'');
+		input++;
 	}
-	return (count);
+	return (length);
 }
 
 t_cmd	*add_cmd(t_cmd *cmd, char *input)
@@ -81,40 +90,34 @@ t_cmd	*add_cmd(t_cmd *cmd, char *input)
 	return (cmd);
 }
 
-t_cmd	*split_cmd(char *input)
+t_cmd	*input_split(char *input)
 {
-	int	i;
-	t_cmd	*cmd;
-	char	*tmp;
+	t_cmd	*result;
+	char	*temp;
 
-	i = 0;
-	cmd = NULL;
-	while (input[i])
+	result = NULL;
+	while (input[0])
 	{
-		if (input[i] == '|')
-		{
-			tmp = ft_substr(input, 0, i);
-			cmd = add_cmd(cmd, tmp);
-			input = input + i + 1;
-			while (*input == ' ')
-				input++;
-			i = 0;
-		}
-		i++;
+		temp = ft_substr(input, 0, words_count(input));
+		result = add_cmd(result, temp);
+		input = input + words_count(input);
+		if (input[0] == '|')
+			input++;
 	}
-	cmd = add_cmd(cmd, input);
-	return (cmd);
+	if (check_quoted(result))
+		return (NULL);
+	return (result);
 }
 
 int	main(int ac, char **av)
 {
 	t_cmd	*cmd;
-	int	error;
+	int	err;
 
-	error = 0;
+	err = 0;
 	if (ac == 2)
 	{
-		cmd = split_cmd(av[1]);
+		cmd = input_split(av[1]);
 		while (cmd)
 		{
 			printf("%s\n", cmd->cmd);
