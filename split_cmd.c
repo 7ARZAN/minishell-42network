@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/18 00:16:18 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/18 03:16:49 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static int	words_count(char *input)
 			count++;
 		i++;
 	}
-	return (count + 1);
+	return (count);
 }
 
 t_cmd	*add_cmd(t_cmd *cmd, char *input)
@@ -68,6 +68,8 @@ t_cmd	*add_cmd(t_cmd *cmd, char *input)
 	t_cmd	*tmp;
 
 	new = (t_cmd *)malloc(sizeof(t_cmd));
+	if (!new)
+		return (NULL);
 	new->cmd = input;
 	new->next = NULL;
 	if (!cmd)
@@ -79,7 +81,7 @@ t_cmd	*add_cmd(t_cmd *cmd, char *input)
 	return (cmd);
 }
 
-t_cmd	*split_cmd(char *input, int *error)
+t_cmd	*split_cmd(char *input)
 {
 	int	i;
 	t_cmd	*cmd;
@@ -94,13 +96,13 @@ t_cmd	*split_cmd(char *input, int *error)
 			tmp = ft_substr(input, 0, i);
 			cmd = add_cmd(cmd, tmp);
 			input = input + i + 1;
+			while (*input == ' ')
+				input++;
 			i = 0;
 		}
 		i++;
 	}
 	cmd = add_cmd(cmd, input);
-	if (check_quoted(cmd))
-		*error = 1;
 	return (cmd);
 }
 
@@ -112,9 +114,14 @@ int	main(int ac, char **av)
 	error = 0;
 	if (ac == 2)
 	{
-		cmd = split_cmd(av[1], &error);
-		if (!error)
+		cmd = split_cmd(av[1]);
+		while (cmd)
+		{
 			printf("%s\n", cmd->cmd);
+			if (!cmd->next)
+				break ;
+			cmd = cmd->next;
+		}
 	}
 	return (0);
 }
