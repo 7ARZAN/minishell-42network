@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/18 04:02:12 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/18 05:05:57 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,23 +52,24 @@ static int	check_quoted(t_cmd *cmd)
 static int	words_count(char *input)
 {
 
-		int	length;
-	int	dquotes;
-	int	squotes;
+	int	count;
+	int	sq;
+	int	dq;
 
-	length = 0;
-	dquotes = 0;
-	squotes = 0;
-	while (input && input[0])
+	count = 0;
+	sq = 0;
+	dq = 0;
+	while (input && input[count])
 	{
-		length++;
-		if (ft_strchr("|", input[0]) && (!(dquotes & 1) && !(squotes & 1)))
-			return (length);
-		dquotes += (!(squotes & 1) && input[0] == '"');
-		squotes += (!(dquotes & 1) && input[0] == '\'');
-		input++;
+		if (input[count] == '\'' && !dq)
+			sq = !sq;
+		if (input[count] == '\"' && !sq)
+			dq = !dq;
+		if (input[count] == '|' && !sq && !dq)
+			return (count);
+		count++;
 	}
-	return (length);
+	return (count);
 }
 
 t_cmd	*add_cmd(t_cmd *cmd, char *input)
