@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/19 02:08:29 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/19 02:08:45 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,18 +85,18 @@ char	**split_args(char *cmd)
 	return (result);
 }
 
-int	main(int ac, char **av)
-{
-	char	**args;
-	int		i;
-
-	i = 0;
-	args = split_args(av[1]);
-	printf("here is the cmd:\t\"%s\"\n", av[1]);
-	while (args[i] != NULL)
-	{
-		printf("here is the arg [%d]:\t\"%s\"\n", i, args[i]);
-		i++;
-	}
-	return (0);
-}
+// int	main(int ac, char **av)
+// {
+// 	char	**args;
+// 	int		i;
+//
+// 	i = 0;
+// 	args = split_args(av[1]);
+// 	printf("here is the cmd:\t\"%s\"\n", av[1]);
+// 	while (args[i] != NULL)
+// 	{
+// 		printf("here is the arg [%d]:\t\"%s\"\n", i, args[i]);
+// 		i++;
+// 	}
+// 	return (0);
+// }
