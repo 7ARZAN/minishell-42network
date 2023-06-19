@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:13:04 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/19 02:11:44 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/19 02:19:30 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct	s_cmd
 //struct_cmd functions !
 t_cmd	*add_cmd(t_cmd *cmd, char *input);
 
+int	checker(t_cmd *cmd);
 
 int	check_quotes(char *str);
 int	skip_quotes(char *str, int i);
