@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/18 05:05:57 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/19 02:09:07 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,22 +110,22 @@ t_cmd	*input_split(char *input)
 	return (result);
 }
 
-int	main(int ac, char **av)
-{
-	t_cmd	*cmd;
-	int	err;
-
-	err = 0;
-	if (ac == 2)
-	{
-		cmd = input_split(av[1]);
-		while (cmd)
-		{
-			printf("%s\n", cmd->cmd);
-			if (!cmd->next)
-				break ;
-			cmd = cmd->next;
-		}
-	}
-	return (0);
-}
+// int	main(int ac, char **av)
+// {
+// 	t_cmd	*cmd;
+// 	int	err;
+//
+// 	err = 0;
+// 	if (ac == 2)
+// 	{
+// 		cmd = input_split(av[1]);
+// 		while (cmd)
+// 		{
+// 			printf("%s\n", cmd->cmd);
+// 			if (!cmd->next)
+// 				break ;
+// 			cmd = cmd->next;
+// 		}
+// 	}
+// 	return (0);
+// }
