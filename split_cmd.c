@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/19 19:39:24 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/19 23:07:37 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int	main(int ac, char **av)
 	int	err;
 
 	err = 0;
-	if (ac == 2)
+	if (ac == 2 && av[1])
 	{
 		cmd = split_cmd(av[1]);
 		printf("[whole command is]:\t%s\n", av[1]);

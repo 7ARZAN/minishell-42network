@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:13:04 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/19 02:19:30 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/19 23:29:27 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,19 @@
 # include <stdlib.h>
 # include <unistd.h>
 
+enum e_redir
+{
+	REDIR_IN,
+	REDIR_OUT,
+	APPEND,
+	HEREDOC
+};
+
 typedef struct	s_redir
 {
-	char	**redir_files;
-	char	**redir_type;
+	char	*redir_files;
+	int	redir_type;
+	struct s_redir	*next;
 }				t_redir;
 
 typedef struct	s_cmd
