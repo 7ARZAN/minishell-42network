@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/19 02:23:53 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/19 19:34:57 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ t_cmd	*input_split(char *input)
 		if (input[0] == '|')
 			input++;
 	}
-	if (check_quoted(result) || checker(result) == 1)
+	if (check_quoted(result))
 		return (NULL);
 	return (result);
 }
@@ -100,9 +100,10 @@ int	main(int ac, char **av)
 	if (ac == 2)
 	{
 		cmd = input_split(av[1]);
+		printf("[whole command is]:\t%s\n", av[1]);
 		while (cmd)
 		{
-			printf("%s\n", cmd->cmd);
+			printf("[command is]:\t%s\n", cmd->cmd);
 			if (!cmd->next)
 				break ;
 			cmd = cmd->next;

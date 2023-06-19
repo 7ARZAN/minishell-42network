@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 04:10:13 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/19 06:47:57 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/19 19:00:19 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ char	*prompt_msg(void)
 	host = get_host_name();
 	dir = get_work_dir();
 	branch = get_branch_name();
-	prompt = ft_strdup("\033[1;37mUSER\033[0m\033[1;25m@\033[0m\033[1;36mmish\033[0m\033[1;34m:\033[0m\033[1;12mD\033[0m\033[1;32mB\033[0m\033[1;29m$\033[0m ");
+	prompt = ft_strdup("\033[1;36mmish\033[0m\033[1;34m:\033[0m\033[1;12mD\033[0m\033[1;32mB\033[0m\033[1;29m$\033[0m ");
 	if (getenv("USER"))
 		prompt = replace_all_words(prompt, "USER", getenv("USER"), 1);
 	if (host)
