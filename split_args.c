@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/18 06:57:28 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/19 02:07:31 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,18 +90,22 @@
 
 static char	*next_arg(char *cmd)
 {
-	int	dquotes;
-	int	squotes;
+	int	i;
+	int	sq;
+	int	dq;
 
-	dquotes = 0;
-	squotes = 0;
-	while (!ft_strchr("\t ><|;", cmd[0]) || ((dquotes & 1) || (squotes & 1)))
+	i = 0;
+	sq = 0;
+	dq = 0;
+	while (cmd[i] && (cmd[i] != ' ' || sq || dq))
 	{
-		dquotes += (!(squotes & 1) && cmd[0] == '"');
-		squotes += (!(dquotes & 1) && cmd[0] == '\'');
-		cmd++;
+		if (cmd[i] == '\'' && !dq)
+			sq = !sq;
+		else if (cmd[i] == '\"' && !sq)
+			dq = !dq;
+		i++;
 	}
-	return (cmd);
+	return (cmd + i);
 }
 
 static int	args_count(char *cmd)
@@ -128,7 +132,7 @@ static int	args_count(char *cmd)
 	return (count);
 }
 
-char	**parse_args(char *cmd)
+char	**split_args(char *cmd)
 {
 	int		index;
 	int		count;
@@ -163,7 +167,7 @@ int	main(int ac, char **av)
 	int		i;
 
 	i = 0;
-	args = parse_args(av[1]);
+	args = split_args(av[1]);
 	printf("here is the cmd:\t\"%s\"\n", av[1]);
 	while (args[i] != NULL)
 	{
