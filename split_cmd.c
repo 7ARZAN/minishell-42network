@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/19 02:09:07 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/19 02:12:25 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,25 +70,6 @@ static int	words_count(char *input)
 		count++;
 	}
 	return (count);
-}
-
-t_cmd	*add_cmd(t_cmd *cmd, char *input)
-{
-	t_cmd	*new;
-	t_cmd	*tmp;
-
-	new = (t_cmd *)malloc(sizeof(t_cmd));
-	if (!new)
-		return (NULL);
-	new->cmd = input;
-	new->next = NULL;
-	if (!cmd)
-		return (new);
-	tmp = cmd;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
-	return (cmd);
 }
 
 t_cmd	*input_split(char *input)
