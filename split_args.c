@@ -6,87 +6,11 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/19 02:07:31 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/19 02:08:29 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
-
-// static char	*next_arg(char *cmd)
-// {
-// 	int	i;
-// 	int	sq;
-// 	int	dq;
-//
-// 	i = 0;
-// 	sq = 0;
-// 	dq = 0;
-// 	while (cmd[i] && (cmd[i] != ' ' || sq || dq))
-// 	{
-// 		if (cmd[i] == '\'' && !dq)
-// 			sq = !sq;
-// 		else if (cmd[i] == '\"' && !sq)
-// 			dq = !dq;
-// 		i++;
-// 	}
-// 	return (cmd + i);
-// }
-//
-// static int	counter(char *cmd)
-// {
-// 	int	i;
-// 	int	count;
-//
-// 	i = 0;
-// 	count = 0;
-// 	while (cmd && *cmd)
-// 	{
-// 		if (ft_strchr("<>", *cmd))
-// 		{
-// 			while (ft_strchr("<>", *cmd))
-// 				cmd++;
-// 			continue ;
-// 		}
-// 		else if (ft_strchr(" \t", *cmd))
-// 		{
-// 			cmd = next_arg(cmd);
-// 			continue ;
-// 		}
-// 		cmd = next_arg(cmd);
-// 		count++;
-// 	}
-// 	return (count);
-// }
-//
-// char	**split_args(char *cmd)
-// {
-// 	char	**args;
-// 	char	*tmp;
-// 	int	i;
-//
-// 	i = 0;
-// 	args = ft_calloc(counter(cmd) + 1, sizeof(char *));
-// 	while (cmd && *cmd)
-// 	{
-// 		if (ft_strchr("<>", *cmd))
-// 		{
-// 			while (ft_strchr("<>", *cmd))
-// 				cmd++;
-// 			continue ;
-// 		}
-// 		else if (ft_strchr(" \t", *cmd))
-// 		{
-// 			cmd = next_arg(cmd);
-// 			continue ;
-// 		}
-// 		tmp = next_arg(cmd);
-// 		args[i] = ft_strndup(cmd, tmp - cmd);
-// 		cmd = tmp;
-// 		i++;
-// 	}
-// 	args[i] = NULL;
-// 	return (args);
-// }
 
 static char	*next_arg(char *cmd)
 {
