@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/19 19:34:57 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/19 19:39:24 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,13 @@ static int	words_count(char *input)
 	return (count);
 }
 
-t_cmd	*input_split(char *input)
+t_cmd	*split_cmd(char *input)
 {
 	t_cmd	*result;
 	char	*temp;
 
 	result = NULL;
-	while (input[0])
+	while (input && input[0])
 	{
 		temp = ft_substr(input, 0, words_count(input));
 		result = add_cmd(result, temp);
@@ -99,7 +99,7 @@ int	main(int ac, char **av)
 	err = 0;
 	if (ac == 2)
 	{
-		cmd = input_split(av[1]);
+		cmd = split_cmd(av[1]);
 		printf("[whole command is]:\t%s\n", av[1]);
 		while (cmd)
 		{
