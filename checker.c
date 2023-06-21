@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:56:11 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/21 11:01:03 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/21 12:09:45 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,32 +21,30 @@ static void	syntax_error(char *str)
 
 static char	*get_separator(char *str)
 {
-	int	i;
 	int	index;
 	int	dq;
 	int	sq;
 	char	*separator;
 
-	i = 0;
 	index = 0;
 	dq = 0;
 	sq = 0;
 	separator = ft_calloc(2, sizeof(char));
-	while (str && str[i])
+	while (str && str[0])
 	{
 		if (dq && !sq)
 		{
-			if(str[1] && ft_strchr("><", str[i]) && ft_strchr("|", str[i + 1]))
-				i++;
-			else if (ft_strchr("|", str[i]))
+			if(str[1] && ft_strchr("><", str[0]) && ft_strchr("|", str[1]))
+				str++;
+			else if (ft_strchr("|", str[0]))
 			{
-				separator[index++] = str[i];
+				separator[index++] = str[0];
 				separator = realloc(separator, (index + 2) * sizeof(char));
 			}
 		}
-		dq += (str[i] == '\"') ? 1 : 0;
-		sq += (str[i] == '\'') ? 1 : 0;
-		i++;
+		dq += (str[0] == '\"') ? 1 : 0;
+		sq += (str[0] == '\'') ? 1 : 0;
+		str++;
 	}
 	return (separator);
 }
@@ -61,32 +59,28 @@ int	check_separator(t_cmd *cmd)
 	tmp = get_separator(cmd->cmd);
 	while (cmd)
 	{
-		if (ft_strchr(tmp, cmd->sep[i]))
-			i++;
-		else
+		if (ft_strlen(tmp) == ft_strlen(cmd->cmd) || (tmp[0] == '|' && !cmd->next))
 		{
-			syntax_error(cmd->sep);
+			syntax_error(cmd->cmd);
 			free(tmp);
-			return (0);
+			return (1);
 		}
+		cmd->sep = ft_strdup(tmp);
 		cmd = cmd->next;
 	}
-	return (1);
+	return (0);
 }
 
 int	main()
 {
-	int	i;
-	char	*str;
-
-	i = 0;
-	str = ft_strdup("echo \"hello\" | cat -e > file");
-	char **tab = ft_split(str, '|');
-	while (tab[i])
+	char *str = "echo \"hello\" | cat -e | cat -e | cat -e";
+	t_cmd *cmd = ft_calloc(1, sizeof(t_cmd));
+	cmd->cmd = ft_strdup(str);
+	check_separator(cmd);
+	while (cmd)
 	{
-		printf("tab[%d] = %s\n", i, tab[i]);
-		i++;
+		printf("cmd:\t%s\n", cmd->cmd);
+		printf("sep:\t%s\n", cmd->sep);
+		cmd = cmd->next;
 	}
-	printf("tab[%d] = %s\n", i, tab[i]);
-	return (0);
 }
