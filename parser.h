@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:13:04 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/22 02:20:51 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/22 05:37:15 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ typedef struct	s_cmd
 	t_redir	*redir;
 	char	*sep;
 	int	error;
-	pid_t	process_id;
+	//pid_t	process_id;
 	struct s_cmd	*next;
 }				t_cmd;
 //struct_cmd functions !
