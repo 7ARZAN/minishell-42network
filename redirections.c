@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 11:17:38 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/19 23:40:12 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/22 02:30:09 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,99 +16,108 @@
 void	init_redir(t_redir *redir)
 {
 	redir->redir_files = NULL;
-	redir->redir_type = 0;
+	redir->redir_symbols = 0;
 }
 
-//ms_parse_redir is a function that parses the redirections
-static int	ms_detect_redir_type(char *str)
-{
-	if (str[0] == '>' && str[1] == '>')
-		return (APPEND);
-	else if (str[0] == '>')
-		return (REDIR_OUT);
-	else if (str[0] == '<' && str[1] == '<')
-		return (HEREDOC);
-	else if (str[0] == '<')
-		return (REDIR_IN);
-	return (0);
-}
+//detect_redir is a function that detects the redirections symbols
 
-static char	*ms_get_redir_files(char *str)
+static char	*ms_detect_symbol(char *symbl)
 {
-	int		i;
-	int		j;
-	char	*redir_files;
+	int	i;
 
-	i = 0;
-	j = 0;
-	while (str[i] && str[i] != '>' && str[i] != '<')
-		i++;
-	if (!(redir_files = (char *)malloc(sizeof(char) * (i + 1))))
+	if (!symbl)
 		return (NULL);
-	while (j < i)
-	{
-		redir_files[j] = str[j];
-		j++;
-	}
-	redir_files[j] = '\0';
-	return (redir_files);
-}
-
-
-//ms_add_redir is a function that adds redirections to the linked list of redirections
-static void	ms_add_redir(t_cmd *cmd, t_redir *redir)
-{
-	t_redir	*tmp;
-
-	if (!cmd->redir)
-		cmd->redir = redir;
-	else
-	{
-		tmp = cmd->redir;
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = redir;
-	}
-}
-
-//ms_parse_redir is a function that parses the redirections
-int	ms_parse_redir(t_cmd *cmd, t_redir *redir)
-{
-	int		i;
-	int		j;
-	char	*str;
-
-	i = 0;
-	j = 0;
-	str = cmd->cmd;
-	while (str[i])
-	{
-		if (str[i] == '>' || str[i] == '<')
-		{
-			redir->redir_type = ms_detect_redir_type(&str[i]);
-			redir->redir_files = ms_get_redir_files(&str[i]);
-			ms_add_redir(cmd, redir);
-			return (i);
-		}
+	i = 1;
+	if (symbl[0] && symbl[1] && symbl[0] == symbl[1])
 		i++;
+	symbl += i;
+	return (symbl);
+}
+
+static int	ms_checker(t_cmd *cmd)
+{
+	int	i;
+	int	length;
+	char	*tmp;
+
+	i = -1;
+	tmp = NULL;
+	length = ft_strlen(cmd->cmd);
+	while (++i < length)
+	{
+		if (length <= 2 && (!ft_strncmp(cmd->cmd + i, ">>", 2) || !ft_strncmp(cmd->cmd + i, "<<", 2)))
+		{
+			tmp = ms_detect_symbol(cmd->cmd + i);
+			break ;
+		}
+		else if (cmd->cmd[i] == '>' || cmd->cmd[i] == '<')
+		{
+			tmp = cmd->cmd + i;
+			break ;
+		}
+	}
+	return (ft_strcmp(tmp, ">>") && ft_strcmp(tmp, "<<") && ft_strcmp(tmp, ">") && ft_strcmp(tmp, "<"));
+}
+
+int	ms_redirections(t_cmd *cmd)
+{
+	int	i[2];
+	int	length;
+	char	**extract_redi;
+
+	while (cmd)
+	{
+		i[0] = 0;
+		i[1] = 0;
+		extract_redi = extract_redir(cmd->cmd);
+		length = ft_strlen(cmd->cmd);
+		init_redir(cmd->redir);
+		while(++i[0] <= length)
+		{
+			cmd->redir->redir_files = ft_split(cmd->cmd + i[1], ' ');
+			i[1] = i[0];
+		}
+		if (ms_checker(cmd))
+			return (1);
+		cmd = cmd->next;
 	}
 	return (0);
 }
-// int	main(int argc, char **argv)
-// {
-// 	t_cmd	cmd;
-// 	t_redir	redir;
-//
-// 	cmd.cmd = argv[1];
-// 	init_redir(&redir);
-// 	ms_parse_redir(&cmd, &redir);
-// 	while (cmd.redir)
-// 	{
-// 		printf("redir_type: %d\n", cmd.redir->redir_type);
-// 		printf("redir_files: %s\n", cmd.redir->redir_files);
-// 		if (!cmd.redir->next)
-// 			break ;
-// 		cmd.redir = cmd.redir->next;
-// 	}
-// 	return (0);
-// }
+
+t_cmd	*ms_cmd(char *cmd, t_cmd *cmd_list)
+{
+	t_cmd	*new_cmd;
+	t_cmd	*tmp;
+
+	new_cmd = (t_cmd *)malloc(sizeof(t_cmd));
+	new_cmd->cmd = ft_strdup(cmd);
+	new_cmd->redir = (t_redir *)malloc(sizeof(t_redir));
+	new_cmd->next = NULL;
+	if (!cmd_list)
+		return (new_cmd);
+	tmp = cmd_list;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new_cmd;
+	return (cmd_list);
+}
+
+int	main(int ac, char **av)
+{
+	t_cmd	*cmd;
+	int	i;
+
+	i = 0;
+	cmd = NULL;
+	while (++i < ac)
+		cmd = ms_cmd(av[i], cmd);
+	ms_redirections(cmd);
+	while (cmd)
+	{
+		printf("cmd: %s\n", cmd->cmd);
+		printf("redir: %s\n", cmd->redir->redir_files[0]);
+		cmd = cmd->next;
+	}
+	return (0);
+}
+

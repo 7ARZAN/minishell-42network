@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:13:04 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/19 23:29:27 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/22 02:20:51 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,18 @@
 
 enum e_redir
 {
-	REDIR_IN,
-	REDIR_OUT,
-	APPEND,
-	HEREDOC
+	REDIR_INPUT,
+	REDIR_OUTPUT,
+	REDIR_APPEND,
+	REDIR_HEREDOC,
+	NONE
 };
 
 typedef struct	s_redir
 {
-	char	*redir_files;
-	int	redir_type;
-	struct s_redir	*next;
+	char	**redir_files;
+	char	**redir_symbols;
+	char	*heredoc;
 }				t_redir;
 
 typedef struct	s_cmd
@@ -41,6 +42,7 @@ typedef struct	s_cmd
 	t_redir	*redir;
 	char	*sep;
 	int	error;
+	pid_t	process_id;
 	struct s_cmd	*next;
 }				t_cmd;
 //struct_cmd functions !
@@ -56,4 +58,5 @@ int	quote_type(char c);
 int	quote_len(char *str, int i);
 int	remove_quotes(char *str);
 
+char	**extract_redir(char *cmd);
 #endif
