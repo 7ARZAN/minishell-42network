@@ -1,39 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   checker.c                                          :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/16 10:56:11 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/22 05:42:40 by elakhfif         ###   ########.fr       */
+/*   Created: 2023/06/22 05:43:33 by elakhfif          #+#    #+#             */
+/*   Updated: 2023/06/22 06:08:53 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-t_cmd	*check_separator(char *str)
-{
-	t_cmd	*cmd;
-	t_cmd	*head;
-	int		i;
 
-	i = 0;
-	cmd = malloc(sizeof(t_cmd));
-	head = cmd;
-	while (str[i] && str)
+int	main(void)
+{
+	char	*input;
+	t_cmd	*cmds;
+	while (1)
 	{
-		if (ft_strchr("|&", str[i]))
+		input = readline("minishell$ ");
+		if (!input)
 		{
-			cmd->cmd = ft_substr(str, 0, i);
-			str = str + i + 1;
-			cmd->next = malloc(sizeof(t_cmd));
-			cmd = cmd->next;
-			i = 0;
+			printf("\nexit\n");
+			exit(0);
 		}
-		i++;
+		add_history(input);
+		cmds = split_cmd(input);
+		printf("cmd: %s\n", cmds->cmd);
+		while (cmds->args++)
+		{
+			split_args(cmds->args[0]);
+			printf("args: %s\n", cmds->args[0]);
+		}
+		cmds = cmds->next;
+		free(input);
 	}
-	cmd->cmd = ft_substr(str, 0, i);
-	cmd->next = NULL;
-	return (head);
+	return (0);
 }

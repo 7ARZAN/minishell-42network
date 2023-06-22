@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:13:04 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/22 05:37:15 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/22 05:54:58 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 enum e_redir
 {
@@ -45,18 +47,14 @@ typedef struct	s_cmd
 	//pid_t	process_id;
 	struct s_cmd	*next;
 }				t_cmd;
-//struct_cmd functions !
+
+//split_cmd is a function that split the input into commands
+t_cmd	*split_cmd(char *input);
+//add_cmd is a function that add a command to the linked list
 t_cmd	*add_cmd(t_cmd *cmd, char *input);
+//main is a function that call the parser
+int	main(void);
+//split_args is a function that split the command into arguments
+char	**split_args(char *cmd);
 
-int	checker(t_cmd *cmd);
-
-int	check_quotes(char *str);
-int	skip_quotes(char *str, int i);
-int	quote_closed(char *str, int i);
-int	is_quote(char c);
-int	quote_type(char c);
-int	quote_len(char *str, int i);
-int	remove_quotes(char *str);
-
-char	**extract_redir(char *cmd);
 #endif
