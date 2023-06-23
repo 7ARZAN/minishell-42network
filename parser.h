@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:13:04 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/23 05:18:56 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/23 06:21:38 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,5 +58,7 @@ int	main(void);
 char	**split_args(char *cmd);
 //parser is a function that parse the input and return a linked list of commands
 t_cmd	*parser(char *line);
+//check_separator is a function that check if the separator is valid
+int	check_separator(t_cmd *cmd);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/22 05:55:23 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/23 06:14:40 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static int	args_count(char *cmd)
 				cmd++;
 			count--;
 		}
-		else if (!ft_strchr("\t |;", cmd[0]))
+		else if (!ft_strchr("\t |", cmd[0]))
 		{
 			count++;
 			cmd = next_arg(cmd);

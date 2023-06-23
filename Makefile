@@ -6,7 +6,7 @@
 #    By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/22 05:40:27 by elakhfif          #+#    #+#              #
-#    Updated: 2023/06/23 05:20:32 by elakhfif         ###   ########.fr        #
+#    Updated: 2023/06/23 06:23:26 by elakhfif         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ SRCS	=	main.c\
 		struct_cmd.c\
 		split_args.c\
 		parser.c\
+		checker.c\
 
 
 OBJS	=	$(SRCS:.c=.o)
