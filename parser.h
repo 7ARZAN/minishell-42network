@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:13:04 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/22 05:54:58 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/23 05:18:56 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,5 +56,7 @@ t_cmd	*add_cmd(t_cmd *cmd, char *input);
 int	main(void);
 //split_args is a function that split the command into arguments
 char	**split_args(char *cmd);
+//parser is a function that parse the input and return a linked list of commands
+t_cmd	*parser(char *line);
 
 #endif

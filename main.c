@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 05:43:33 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/22 06:08:53 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/23 06:04:59 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,27 @@
 
 int	main(void)
 {
-	char	*input;
 	t_cmd	*cmds;
-	while (1)
+  	char	*input;
+	int	i;
+
+  	while (1)
 	{
-		input = readline("minishell$ ");
-		if (!input)
-		{
-			printf("\nexit\n");
-			exit(0);
-		}
+       		input = readline("minishell$ ");
 		add_history(input);
-		cmds = split_cmd(input);
-		printf("cmd: %s\n", cmds->cmd);
-		while (cmds->args++)
+		cmds = parser(input);
+		while (cmds)
 		{
-			split_args(cmds->args[0]);
-			printf("args: %s\n", cmds->args[0]);
+			printf("cmd is:\t\t%s\n", cmds->cmd);
+			i = 0;
+			while (cmds->args[i])
+			{
+				printf("args is:\t%s\n", cmds->args[i]);
+				i++;
+			}
+			cmds = cmds->next;
 		}
-		cmds = cmds->next;
-		free(input);
 	}
 	return (0);
 }
+
