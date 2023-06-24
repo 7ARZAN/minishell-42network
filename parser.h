@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:13:04 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/23 06:21:38 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/24 07:20:30 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,13 @@ enum e_redir
 	NONE
 };
 
-typedef struct	s_redir
-{
-	char	**redir_files;
-	char	**redir_symbols;
-	char	*heredoc;
-}				t_redir;
-
 typedef struct	s_cmd
 {
 	char	*cmd;
 	char	**args;
-	t_redir	*redir;
+	char	**redir_files;
+	char	**redir_symbols;
+	char	*heredoc;
 	char	*sep;
 	int	error;
 	//pid_t	process_id;
