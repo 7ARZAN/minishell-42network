@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 14:36:25 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/18 06:46:54 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/24 08:25:09 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ int		ft_strncmp(const char *s1, const char *s2, size_t n);
 char	*ft_strmapi(char const *s, char (*f) (unsigned int, char));
 int		ft_strcmp(char *s1, char *s2);
 char	*ft_strndup(const char *str, unsigned int n);
+char		*all_wrds_replace(char *str, char *fword, char *sword);
 
 typedef struct s_list
 {
