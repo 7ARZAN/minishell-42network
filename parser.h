@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:13:04 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/24 07:20:30 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/24 21:19:04 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,6 @@ char	**split_args(char *cmd);
 t_cmd	*parser(char *line);
 //check_separator is a function that check if the separator is valid
 int	check_separator(t_cmd *cmd);
-
+//remove_quotes is a function that remove the quotes from the command
+char	*remove_quotes(char *cmd);
 #endif

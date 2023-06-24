@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/23 06:14:40 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/24 21:21:16 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ char	**split_args(char *cmd)
 		{
 			tmp = ft_substr(cmd, 0,
 					(ft_strlen(cmd) - ft_strlen(next_arg(cmd))));
-			result[index++] = tmp;
+			result[index++] = remove_quotes(tmp);
+			free(tmp);
 		}
 		cmd = next_arg(cmd);
 	}
@@ -85,17 +86,18 @@ char	**split_args(char *cmd)
 	return (result);
 }
 
-// int	main(int ac, char **av)
+// int	main(void)
 // {
+// 	char	*cmd;
 // 	char	**args;
 // 	int		i;
 //
+// 	cmd = "echo \"hello world\" > file";
+// 	args = split_args(cmd);
 // 	i = 0;
-// 	args = split_args(av[1]);
-// 	printf("here is the cmd:\t\"%s\"\n", av[1]);
-// 	while (args[i] != NULL)
+// 	while (args[i])
 // 	{
-// 		printf("here is the arg [%d]:\t\"%s\"\n", i, args[i]);
+// 		printf("%s\n", args[i]);
 // 		i++;
 // 	}
 // 	return (0);
