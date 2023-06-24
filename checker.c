@@ -6,78 +6,77 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:56:11 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/24 21:23:01 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/24 21:54:36 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-// static void	print_error(char *str)
+static char	*get_separator(char *str)
+{
+	int		index[3];
+	char	*result;
+
+	index[0] = 0;
+	index[1] = 0;
+	index[2] = 0;
+	result = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));
+	while (str[0])
+	{
+		if (index[1] % 2 == 0 && index[2] % 2 == 0)
+		{
+			if (str[0] == '|')
+				result[index[0]++] = '|';
+			else if (str[0] == '>' && str[1] == '>')
+				result[index[0]++] = '>';
+			else if (str[0] == '>' && str[1] != '>')
+				result[index[0]++] = '>';
+			else if (str[0] == '<' && str[1] == '<')
+				result[index[0]++] = '<';
+			else if (str[0] == '<' && str[1] != '<')
+				result[index[0]++] = '<';
+		}
+		index[1] = (str[0] == '"') ? index[1] + 1 : index[1];
+		index[2] = (str[0] == '\'') ? index[2] + 1 : index[2];
+		str++;
+	}
+	return (result);
+}
+
+int	check_separator(t_cmd *cmd)
+{
+	char	*tmp;
+
+	while (cmd && cmd->next)
+	{
+		tmp = get_separator(cmd->cmd);
+		if (ft_strlen(tmp) == ft_strlen(cmd->cmd)
+			|| (tmp[0] == '|' && ft_strlen(tmp) == 1))
+		{
+			ft_putstr_fd("mish: syntax error near unexpected token `|'\n", 2);
+			free(tmp);
+			return (1);
+		}
+		cmd->sep = ft_strdup(tmp);
+		free(tmp);
+		cmd = cmd->next;
+	}
+	return (0);
+}
+
+// int	main()
 // {
-// 	ft_putstr_fd("Minishell: syntax error near unexpected token `|", 2);
-// 	ft_putstr_fd(str, 2);
-// 	ft_putstr_fd("'\n", 2);
-// }
+// 	char	*line;
+// 	t_cmd	*cmds;
 //
-// static char	*get_separator(char *str)
-// {
-// 	int	i[3];
-// 	char	*res;
-// 	
-// 	i[0] = 0;
-// 	i[1] = 0;
-// 	i[2] = 0;
-// 	while (str[i[0]])
-// 	{
-// 		if (str[i[0]] == '\'' || str[i[0]] == '\"')
-// 		{
-// 			i[1] = i[0];
-// 			i[0]++;
-// 			while (str[i[0]] && str[i[0]] != str[i[1]])
-// 				i[0]++;
-// 		}
-// 		if (str[i[0]] == '|')
-// 			i[2]++;
-// 		i[0]++;
-// 	}
-// 	if (i[2] == 0)
-// 		return (ft_strdup(str));
-// 	res = (char *)malloc(sizeof(char) * (i[0] + 1));
-// 	i[0] = 0;
-// 	i[1] = 0;
-// 	while (str[i[0]])
-// 	{
-// 		if (str[i[0]] == '\'' || str[i[0]] == '\"')
-// 		{
-// 			i[1] = i[0];
-// 			i[0]++;
-// 			while (str[i[0]] && str[i[0]] != str[i[1]])
-// 				i[0]++;
-// 		}
-// 		if (str[i[0]] == '|')
-// 			break ;
-// 		res[i[0]] = str[i[0]];
-// 		i[0]++;
-// 	}
-// 	res[i[0]] = '\0';
-// 	return (res);
-// }
-//
-// int	check_separator(t_cmd *cmds)
-// {
-// 	char	*tmp;
-//
+// 	line = "hello | there | hey there > file | cat < file | cat > file";
+// 	cmds = split_cmd(line);
 // 	while (cmds)
 // 	{
-// 		tmp = get_separator(cmds->cmd);
-// 		if (ft_strlen(tmp) == ft_strlen(cmds->cmd)
-// 			|| (tmp[0] == '|' && !cmds->next))
-// 		{
-// 			print_error(tmp);
-// 			free(tmp);
+// 		if (check_separator(cmds) == 1)
 // 			return (1);
-// 		}
-// 		free(tmp);
+// 		printf("cmd: %s\n", cmds->cmd);
+// 		printf("sepator: %s\n", cmds->sep);
 // 		cmds = cmds->next;
 // 	}
 // 	return (0);
