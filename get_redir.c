@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 02:18:03 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/22 02:22:43 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/24 21:30:55 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ static int	redi_count(char *cmd)
 	return (count);
 }
 
+//extract redirections from cmd is a function that takes a command and returns an array of redirections
 char	**extract_redir(char *cmd)
 {
 	int		index;
@@ -97,4 +98,21 @@ char	**extract_redir(char *cmd)
 		result[index++] = extract_redirections(cmd);
 	}
 	return (result);
+}
+
+int	main(void)
+{
+	char	*cmd;
+	char	**redir;
+	int		i;
+
+	cmd = "echo hh < sala\"m > fil\"e1 > file2 >> file3";
+	redir = extract_redir(cmd);
+	i = 0;
+	while (redir[i])
+	{
+		printf("%s\n", redir[i]);
+		i++;
+	}
+	return (0);
 }
