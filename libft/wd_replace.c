@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rplce_word.c                                       :+:      :+:    :+:   */
+/*   wd_replace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 07:19:11 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/23 07:31:03 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/24 16:53:18 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,3 +67,13 @@ char		*wd_replace(char *str, char *fword, char *sword, int free_str)
 	return (new_str);
 }
 
+// int	main()
+// {
+// 	char	*str;
+// 	char	*new_str;
+//
+// 	str = ft_strdup("hello world");
+// 	new_str = wd_replace(str, "hello", "hi", 1);
+// 	printf("%s\n", new_str);
+// 	return (0);
+// }
