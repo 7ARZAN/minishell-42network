@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:56:11 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/24 21:54:36 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/26 04:27:23 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,31 +14,26 @@
 
 static char	*get_separator(char *str)
 {
-	int		index[3];
+	int	i;
+	int	index[3];
 	char	*result;
 
+	i = 0;
 	index[0] = 0;
 	index[1] = 0;
 	index[2] = 0;
 	result = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));
-	while (str[0])
+	while (str && str[i])
 	{
-		if (index[1] % 2 == 0 && index[2] % 2 == 0)
-		{
-			if (str[0] == '|')
-				result[index[0]++] = '|';
-			else if (str[0] == '>' && str[1] == '>')
-				result[index[0]++] = '>';
-			else if (str[0] == '>' && str[1] != '>')
-				result[index[0]++] = '>';
-			else if (str[0] == '<' && str[1] == '<')
-				result[index[0]++] = '<';
-			else if (str[0] == '<' && str[1] != '<')
-				result[index[0]++] = '<';
-		}
-		index[1] = (str[0] == '"') ? index[1] + 1 : index[1];
-		index[2] = (str[0] == '\'') ? index[2] + 1 : index[2];
-		str++;
+		if (str[i] == '>' && str[i + 1] == '>')
+			index[0] = i;
+		else if (str[i] == '>' && str[i + 1] != '>')
+			index[1] = i;
+		else if (str[i] == '<')
+			index[2] = i;
+		i++;
+	}
+	{
 	}
 	return (result);
 }
