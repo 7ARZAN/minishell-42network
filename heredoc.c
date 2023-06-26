@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 06:30:14 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/26 06:53:32 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/26 07:51:09 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,47 +43,46 @@ static char	*read_heredoc(char *eof)
 //heredoc function : read from stdin until EOF and write it to a file
 static void	heredoc(t_cmd *cmd, char *eof)
 {
-	char	*line;
+	char	*input;
 	int		fd;
 
-	line = read_heredoc(eof);
+	input = read_heredoc(eof);
 	fd = open("/tmp/heredoc", O_CREAT | O_RDWR | O_TRUNC, 0644);
-	write(fd, line, ft_strlen(line));
+	write(fd, input, ft_strlen(input));
 	close(fd);
-	cmd->heredoc = ft_strdup("/tmp/heredoc");
 }
 
 //heredoc_handler : check if there is a heredoc in the command and call heredoc function
 //then replace the heredoc with the file path
 void		heredoc_handler(t_cmd *cmd)
 {
-	int		i;
+	int	i;
 	char	*eof;
+	char	*tmp;
 
 	i = 0;
 	while (cmd->args[i])
 	{
-		if (cmd->args[i][0] == '<' && cmd->args[i][1] == '<')
+		if (!ft_strcmp(cmd->args[i], "<<"))
 		{
-			eof = ft_strdup(cmd->args[i + 1]);
+			eof = cmd->args[i + 1];
 			heredoc(cmd, eof);
-			free(eof);
+			tmp = ft_strdup("/tmp/heredoc");
 			free(cmd->args[i]);
-			free(cmd->args[i + 1]);
-			cmd->args[i] = ft_strdup("<");
-			cmd->args[i + 1] = ft_strdup("/tmp/heredoc");
+			cmd->args[i] = tmp;
+			cmd->heredoc = tmp;
+			cmd->args[i + 1] = NULL;
+			break ;
 		}
 		i++;
 	}
-	free(cmd->args[i]);
 }
 
-// int	main(void)
-// {
-// 	t_cmd	cmd;
-//
-// 	cmd.heredoc = NULL;
-// 	cmd.args = ft_split("cat << EOF", ' ');
-// 	heredoc_handler(&cmd);
-// 	return (0);
-// }
+int	main(void)
+{
+	t_cmd	cmd;
+
+	cmd.heredoc = NULL;
+	cmd.args = ft_split("cat << EOF", ' ');
+	heredoc_handler(&cmd);
+}
