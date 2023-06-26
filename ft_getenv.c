@@ -1,37 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_getenv.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/05 15:14:13 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/26 05:09:46 by elakhfif         ###   ########.fr       */
+/*   Created: 2023/06/26 04:49:51 by elakhfif          #+#    #+#             */
+/*   Updated: 2023/06/26 04:50:05 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "parser.h"
 
-size_t	ft_strlen(const char *str)
+char	*ft_getenv(char *var, t_env *env)
 {
-	size_t	i;
+	t_env	*tmp;
 
-	i = 0;
-	if (!str || !*str)
-		return (0);
-	while (str[i] != '\0')
-		i++;
-	return (i);
+	tmp = env;
+	while (tmp)
+	{
+		if (!ft_strcmp(tmp->key, var))
+			return (ft_strdup(tmp->value));
+		tmp = tmp->next;
+	}
+	return (NULL);
 }
-/*
-int main()
-{
-	char *str;
-
-    str = "slimka";
-    printf("%zu\n",ft_strlen(str));
-    printf("%zu\n",ft_strlen(NULL));
-    printf("%zu\n",ft_strlen('\0'));
-    printf("%zu\n",ft_strlen(""));
-}
-*/

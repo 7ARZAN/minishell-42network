@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 08:19:13 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/24 16:50:57 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/26 05:06:07 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static char	*replaced_str(char *str, char *fwd, char *swd)
 	return (res);
 }
 
-char	*replace_all_words(char *str, char *fwd, char *swd, int usefree)
+char	*all_wrds_replace(char *str, char *fwd, char *swd, int usefree)
 {
 	char	*res;
 

@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 09:52:20 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/26 04:48:49 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/26 05:16:00 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,62 +103,43 @@ static char	*ft_getenv(char *var, t_env *env)
 	return (NULL);
 }
 
-static char	*is_escaped(char *str, int index)
-{
-	int	i;
-	int	backslash;
-
-	i = index - 1;
-	backslash = 0;
-	while (i >= 0 && str[i] == '\\')
-	{
-		backslash++;
-		i--;
-	}
-	if (backslash % 2 == 0)
-		return (NULL);
-	return (str + i + 1);
-}
-
 char	*replace_var(char *str, t_env *env)
 {
-	int		i;
+	int	i;
 	char	*var;
-	char	*value;
+	char	*tmp;
+	char	*ret;
 
-	i = 0;
-	while (str[i])
+	ret = clean_unused_var_symbols(str);
+	i = next_var(ret, 0);
+	while (ret[i])
 	{
-		if (str[i] == '$' && !is_escaped(str, i))
-		{
-			var = get_var(str, i);
-			value = get_env_value(var, env);
-			if (value)
-				str = skip_and_replace(str, value, var, i);
-			else
-				str = skip_and_replace(str, "", var, i);
-			free(var);
-			free(value);
-		}
-		i = next_var(str, i);
+		var = get_var(ret, i);
+		tmp = all_wrds_replace(var, "$", NULL, 0);
+		if (ft_strncmp("$?", var, 2) == 0)
+			ret = skip_and_replace(ret, ft_itoa(EXIT_SUCCESS), var, i);
+		else if (ft_getenv(tmp, env))
+			ret = skip_and_replace(ret, ft_getenv(tmp, env), var, i);
+		else
+			ret = skip_and_replace(ret, "", var, i);
+
 	}
-	str = clean_unused_var_symbols(str);
-	return (str);
+	return (ret);
 }
 
-// int	main()
-// {
-// 	int		i;
-// 	char	*str;
-// 	t_env	*env;
-//
-// 	i = 0;
-// 	str = ft_strdup("hello $zaba, how are you $USER");
-// 	env = malloc(sizeof(t_env));
-// 	env->key = ft_strdup("USER");
-// 	env->value = ft_strdup("elakhfif");
-// 	env->next = NULL;
-// 	str = replace_var(str, env);
-// 	printf("%s\n", str);
-// 	return (0);
-// }
+int	main()
+{
+	int		i;
+	char	*str;
+	t_env	*env;
+
+	i = 0;
+	str = ft_strdup("hello $USER, how are you $USER");
+	env = malloc(sizeof(t_env));
+	env->key = ft_strdup("USER");
+	env->value = ft_strdup("elakhfif");
+	env->next = NULL;
+	str = replace_var(str, env);
+	printf("%s\n", str);
+	return (0);
+}
