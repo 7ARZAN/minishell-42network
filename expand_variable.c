@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 09:52:20 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/26 05:16:00 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/26 06:02:44 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,20 +89,6 @@ static char	*clean_unused_var_symbols(char *str)
 	return (str);
 }
 
-static char	*ft_getenv(char *var, t_env *env)
-{
-	t_env	*tmp;
-
-	tmp = env;
-	while (tmp)
-	{
-		if (!ft_strcmp(tmp->key, var))
-			return (ft_strdup(tmp->value));
-		tmp = tmp->next;
-	}
-	return (NULL);
-}
-
 char	*replace_var(char *str, t_env *env)
 {
 	int	i;
@@ -118,28 +104,26 @@ char	*replace_var(char *str, t_env *env)
 		tmp = all_wrds_replace(var, "$", NULL, 0);
 		if (ft_strncmp("$?", var, 2) == 0)
 			ret = skip_and_replace(ret, ft_itoa(EXIT_SUCCESS), var, i);
-		else if (ft_getenv(tmp, env))
-			ret = skip_and_replace(ret, ft_getenv(tmp, env), var, i);
+		else if (getenv(tmp))
+			ret = skip_and_replace(ret, getenv(tmp), var, i);
 		else
 			ret = skip_and_replace(ret, "", var, i);
+		i = next_var(ret, i);
 
 	}
 	return (ret);
 }
 
-int	main()
-{
-	int		i;
-	char	*str;
-	t_env	*env;
-
-	i = 0;
-	str = ft_strdup("hello $USER, how are you $USER");
-	env = malloc(sizeof(t_env));
-	env->key = ft_strdup("USER");
-	env->value = ft_strdup("elakhfif");
-	env->next = NULL;
-	str = replace_var(str, env);
-	printf("%s\n", str);
-	return (0);
-}
+// int	main()
+// {
+// 	int		i;
+// 	char	*str;
+// 	t_env	*env;
+//
+// 	i = 0;
+// 	str = ft_strdup("hello $?, how are you $USER");
+// 	env = malloc(sizeof(t_env));
+// 	printf("%s\n", str);
+// 	printf("%s\n", replace_var(str, env));
+// 	return (0);
+// }
