@@ -6,12 +6,13 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 06:30:14 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/26 06:38:23 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/26 06:49:26 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
+//read from stdin until EOF and return the string !
 static char	*read_heredoc(char *eof)
 {
 	char	*line;
@@ -39,6 +40,7 @@ static char	*read_heredoc(char *eof)
 	return (line);
 }
 
+//heredoc function : read from stdin until EOF and write it to a file
 static void	heredoc(t_cmd *cmd, char *eof)
 {
 	char	*line;
@@ -51,6 +53,8 @@ static void	heredoc(t_cmd *cmd, char *eof)
 	cmd->heredoc = ft_strdup("/tmp/heredoc");
 }
 
+//heredoc_handler : check if there is a heredoc in the command and call heredoc function
+//then replace the heredoc with the file path
 void		heredoc_handler(t_cmd *cmd)
 {
 	int		i;
@@ -74,15 +78,13 @@ void		heredoc_handler(t_cmd *cmd)
 	free(cmd->args[i]);
 }
 
-int	main(void)
-{
-	t_cmd	cmd;
-
-	cmd.args = malloc(sizeof(char *) * 4);
-	cmd.args[0] = ft_strdup("cat");
-	cmd.args[1] = ft_strdup("<<");
-	cmd.args[2] = ft_strdup("EOF");
-	cmd.args[3] = NULL;
-	heredoc_handler(&cmd);
-	return (0);
-}
+// int	main(void)
+// {
+// 	t_cmd	cmd;
+//
+// 	cmd.args = malloc(sizeof(char *) * 3);
+// 	cmd.args[0] = ft_strdup("<<");
+// 	cmd.args[1] = ft_strdup("EOF");
+// 	heredoc_handler(&cmd);
+// 	return (0);
+// }
