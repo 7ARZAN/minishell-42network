@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 09:52:20 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/26 04:46:44 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/26 04:48:49 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,15 +88,8 @@ static char	*clean_unused_var_symbols(char *str)
 	}
 	return (str);
 }
-// here im just adding the env struct to the function to get the value of the variable
-typedef struct s_env
-{
-	char			*key;
-	char			*value;
-	struct s_env	*next;
-}	t_env;
 
-static char	*get_env_value(char *var, t_env *env)
+static char	*ft_getenv(char *var, t_env *env)
 {
 	t_env	*tmp;
 
