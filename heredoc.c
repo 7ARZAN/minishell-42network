@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 06:30:14 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/26 06:49:26 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/26 06:53:32 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,8 @@ void		heredoc_handler(t_cmd *cmd)
 // {
 // 	t_cmd	cmd;
 //
-// 	cmd.args = malloc(sizeof(char *) * 3);
-// 	cmd.args[0] = ft_strdup("<<");
-// 	cmd.args[1] = ft_strdup("EOF");
+// 	cmd.heredoc = NULL;
+// 	cmd.args = ft_split("cat << EOF", ' ');
 // 	heredoc_handler(&cmd);
 // 	return (0);
 // }
