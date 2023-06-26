@@ -6,11 +6,10 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 09:52:20 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/26 04:45:30 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/26 04:46:44 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <errno.h>
 #include "parser.h"
 
 static int	next_var(char *str, int index)
@@ -154,19 +153,19 @@ char	*replace_var(char *str, t_env *env)
 	return (str);
 }
 
-int	main()
-{
-	int		i;
-	char	*str;
-	t_env	*env;
-
-	i = 0;
-	str = ft_strdup("hello $?, how are you $USER");
-	env = malloc(sizeof(t_env));
-	env->key = ft_strdup("USER");
-	env->value = ft_strdup("elakhfif");
-	env->next = NULL;
-	str = replace_var(str, env);
-	printf("%s\n", str);
-	return (0);
-}
+// int	main()
+// {
+// 	int		i;
+// 	char	*str;
+// 	t_env	*env;
+//
+// 	i = 0;
+// 	str = ft_strdup("hello $zaba, how are you $USER");
+// 	env = malloc(sizeof(t_env));
+// 	env->key = ft_strdup("USER");
+// 	env->value = ft_strdup("elakhfif");
+// 	env->next = NULL;
+// 	str = replace_var(str, env);
+// 	printf("%s\n", str);
+// 	return (0);
+// }
