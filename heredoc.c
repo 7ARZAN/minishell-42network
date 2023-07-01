@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 06:30:14 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/26 07:51:09 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/06/28 19:04:53 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ static void	heredoc(t_cmd *cmd, char *eof)
 
 	input = read_heredoc(eof);
 	fd = open("/tmp/heredoc", O_CREAT | O_RDWR | O_TRUNC, 0644);
-	write(fd, input, ft_strlen(input));
 	close(fd);
 }
 
@@ -70,7 +69,6 @@ void		heredoc_handler(t_cmd *cmd)
 			tmp = ft_strdup("/tmp/heredoc");
 			free(cmd->args[i]);
 			cmd->args[i] = tmp;
-			cmd->heredoc = tmp;
 			cmd->args[i + 1] = NULL;
 			break ;
 		}
