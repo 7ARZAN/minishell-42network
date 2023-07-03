@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:13:04 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/26 04:47:58 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/07/02 12:34:27 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@
 
 enum e_redir
 {
-	REDIR_INPUT,
-	REDIR_OUTPUT,
-	REDIR_APPEND,
-	REDIR_HEREDOC,
+	REDIR_IN,
+	REDIR_OUT,
+	APPEND,
+	HEREDOC,
 	NONE
 };
 
@@ -50,18 +50,21 @@ typedef struct	s_cmd
 	struct s_cmd	*next;
 }				t_cmd;
 
-//split_cmd is a function that split the input into commands
+//split_cmd is a function that split the input into commands and return a linked list of commands !
 t_cmd	*split_cmd(char *input);
-//add_cmd is a function that add a command to the linked list
+//add_cmd is a function that add a command to the linked list of commands !
 t_cmd	*add_cmd(t_cmd *cmd, char *input);
-//main is a function that call the parser
+//main is a function that call the parser and the executor !
 int	main(void);
-//split_args is a function that split the command into arguments
+//split_args is a function that split the command into arguments and return a table of arguments !
 char	**split_args(char *cmd);
-//parser is a function that parse the input and return a linked list of commands
+//parser is a function that parse the input and return a linked list of commands !
 t_cmd	*parser(char *line);
-//check_separator is a function that check if the separator is valid
+//check_separator is a function that check if the separator is valid or not !
 int	check_separator(t_cmd *cmd);
-//remove_quotes is a function that remove the quotes from the command
+//remove_quotes is a function that remove the quotes from the command and return the command without quotes !
 char	*remove_quotes(char *cmd);
+// get_redirections is a function that get the redirections from the command and return a table of redirections !
+char	**get_redirections(char *input);
+
 #endif

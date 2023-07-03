@@ -6,7 +6,7 @@
 #    By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022\10/03 21:50:13 by elakhfif          #+#    #+#              #
-#    Updated: 2023/06/24 16:40:11 by elakhfif         ###   ########.fr        #
+#    Updated: 2023/07/02 12:42:18 by elakhfif         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,6 +55,7 @@ SRC =		ft_isalpha.c\
 			all_wrds_replace.c\
 			ft_strcpy.c\
 			all_wrds_replace.c\
+			ft_isspace.c\
 
 BONUSSRC = 	ft_lstnew_bonus.c\
 			ft_lstadd_front_bonus.c\

@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 14:36:25 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/24 16:52:06 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/07/02 12:41:59 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ char	*ft_strndup(const char *str, unsigned int n);
 char		*all_wrds_replace(char *str, char *fwd, char *swd, int usefree);
 char		*wd_replace(char *str, char *fword, char *sword, int free_str);
 char	*ft_strcpy(char *dest, char *src);
+int		ft_isspace(int c);
 
 typedef struct s_list
 {

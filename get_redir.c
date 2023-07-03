@@ -5,114 +5,122 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/22 02:18:03 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/24 21:30:55 by elakhfif         ###   ########.fr       */
+/*   Created: 2023/06/16 11:17:38 by elakhfif          #+#    #+#             */
+/*   Updated: 2023/07/02 12:45:32 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-static char	*next_redi(char *cmd)
+static char	*next_redirection(char *input)
 {
-	int	sq;
-	int	dq;
+	int		i;
+	int		sq;
+	int		dq;
 
+	i = 0;
 	sq = 0;
 	dq = 0;
-	while (!ft_strchr("><", cmd[0]) || ((sq % 2) || (dq % 2)))
+	while (input[i])
 	{
-		dq += (!(sq % 2) && cmd[0] == '\"');
-		sq += (!(dq % 2) && cmd[0] == '\'');
-		cmd++;
+		if (input[i] == '\'' && !dq)
+			sq = !sq;
+		if (input[i] == '\"' && !sq)
+			dq = !dq;
+		if (input[i] == '>' && !sq && !dq)
+			return (input + i);
+		i++;
 	}
-	return (cmd);
+	return (NULL);
 }
 
-static int	skip_spaces(char *cmd)
-{
-	int	count;
-
-	count = 0;
-	while (cmd[count] && ft_strchr("\t ", cmd[count]))
-		count++;
-	return (count);
-}
-
-static char	*extract_redirections(char *cmd)
+static int	skip_spaces(char *input)
 {
 	int	i;
-	int	dquotes;
-	int	squotes;
 
 	i = 0;
-	dquotes = 0;
-	squotes = 0;
-	if (ft_strchr("><", cmd[i]))
-	{
-		while (cmd[i] && ft_strchr("><", cmd[i]))
-			i++;
-		return (ft_substr(cmd, 0, i));
-	}
-	while (!ft_strchr("\t ><|", cmd[i]) || ((dquotes & 1) || (squotes & 1)))
-	{
-		dquotes += (!(squotes & 1) && cmd[i] == '"');
-		squotes += (!(dquotes & 1) && cmd[i] == '\'');
+	while (input[i] && ft_isspace(input[i]))
 		i++;
-	}
-	return (ft_substr(cmd, 0, i));
+	return (i);
 }
 
-static int	redi_count(char *cmd)
+static char	*get_redirection(char *input, int *type)
 {
-	int	count;
+	int		i;
+	int		sq;
+	int		dq;
 
-	count = 0;
-	cmd = next_redi(cmd);
-	while (cmd[0])
+	i = 0;
+	sq = 0;
+	dq = 0;
+	while (input[i])
 	{
-		count++;
-		while (cmd[0] && ft_strchr("><", cmd[0]))
-			cmd++;
-		cmd = next_redi(cmd);
+		if (input[i] == '\'' && !dq)
+			sq = !sq;
+		if (input[i] == '\"' && !sq)
+			dq = !dq;
+		if (input[i] == '>' && !sq && !dq)
+		{
+			if (input[i + 1] == '>')
+				*type = APPEND;
+			else
+				*type = REDIR_OUT;
+			return (input + i);
+		}
+		i++;
+	}
+	return (NULL);
+}
+
+static int	count_redirections(char *input)
+{
+	int		i;
+	int		sq;
+	int		dq;
+	int		count;
+
+	i = 0;
+	sq = 0;
+	dq = 0;
+	count = 0;
+	while (input[i])
+	{
+		if (input[i] == '\'' && !dq)
+			sq = !sq;
+		if (input[i] == '\"' && !sq)
+			dq = !dq;
+		if (input[i] == '>' && !sq && !dq)
+			count++;
+		i++;
+		input = next_redirection(input);
 	}
 	return (count);
 }
 
-//extract redirections from cmd is a function that takes a command and returns an array of redirections
-char	**extract_redir(char *cmd)
+char	**get_redirections(char *input)
 {
-	int		index;
-	int		count;
-	char	**result;
-
-	index = 0;
-	count = redi_count(cmd) * 2;
-	result = ft_calloc(count + 2, sizeof(char *));
-	result[index++] = ft_itoa(count);
-	while (cmd && index < count)
-	{
-		cmd = next_redi(cmd);
-		result[index] = extract_redirections(cmd);
-		cmd += ft_strlen(result[index++]);
-		cmd += skip_spaces(cmd);
-		result[index++] = extract_redirections(cmd);
-	}
-	return (result);
-}
-
-int	main(void)
-{
-	char	*cmd;
-	char	**redir;
+	char	**redirections;
 	int		i;
+	int		type;
 
-	cmd = "echo hh < sala\"m > fil\"e1 > file2 >> file3";
-	redir = extract_redir(cmd);
 	i = 0;
-	while (redir[i])
+	if (!(redirections = (char **)malloc(sizeof(char *) *
+					(count_redirections(input) + 1))))
+		return (NULL);
+	while (*input)
 	{
-		printf("%s\n", redir[i]);
+		input += skip_spaces(input);
+		if (!(redirections[i] = get_redirection(input, &type)))
+			break ;
+		if (type == APPEND)
+			input += 2;
+		else
+			input++;
+		redirections[i] = ft_substr(input, 0, ft_strlen(input) -
+				ft_strlen(next_redirection(input)));
+		input += ft_strlen(redirections[i]);
 		i++;
 	}
-	return (0);
+	redirections[i] = NULL;
+	return (redirections);
 }
