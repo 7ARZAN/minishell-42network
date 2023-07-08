@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:56:11 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/26 06:10:11 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/07/08 14:09:26 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,21 @@ static char	*get_separator(char *str)
 	while (str && str[i])
 	{
 		if (str[i] == '>' && str[i + 1] == '>')
-			index[0] = i;
+			index[0] = i + 2;
 		else if (str[i] == '>' && str[i + 1] != '>')
-			index[1] = i;
-		else if (str[i] == '<')
-			index[2] = i;
+			index[1] = i + 1;
+		else if (str[i] == '|')
+			index[2] = i + 1;
 		i++;
 	}
-	{
-	}
+	if (index[0])
+		result = ft_strcpy(result, str + index[0] - 2);
+	else if (index[1])
+		result = ft_strcpy(result, str + index[1] - 1);
+	else if (index[2])
+		result = ft_strcpy(result, str + index[2] - 1);
+	else
+		result = ft_strcpy(result, str + i);
 	return (result);
 }
 
