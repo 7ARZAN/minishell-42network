@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 06:30:14 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/07/08 17:02:03 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/07/08 17:57:05 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,19 @@ static int	checking_redir(t_cmd *cmd)
 		len = ft_strlen(cmd->redir_symbols[i]);
 		if (len <= 2 && (!ft_strncmp("<<", cmd->redir_symbols[i], len) || !ft_strncmp(">>", cmd->redir_symbols[i], len)))
 		{
-			if (!ft_strlen(cmd->redir_files[i]))
+			if (cmd->redir_files[i + 1] == NULL)
 				tmp = "syntax error near unexpected token `newline'";
 		}
 		else
 			tmp = get_redir_symbol(cmd->redir_symbols[i]);
 	}
-	if (!tmp)
+	if (tmp)
+		{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(tmp, 2);
+		ft_putstr_fd("\n", 2);
 		return (0);
-	ft_putstr_fd("mish: syntax error near unexpected token `", 2);
-	ft_putendl_fd(tmp, 2);
-	//free(tmp);
+	}
 	return (1);
 }
 
