@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 14:18:06 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/07/08 14:32:21 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/07/08 14:39:06 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ int main()
 {
 	char **tab;
 	int i = 0;
-	tab = ms_wildcard("*.c");
+	tab = ms_wildcard("*.d");
 	while (tab[i])
 	{
 		printf("%s\n", tab[i]);
