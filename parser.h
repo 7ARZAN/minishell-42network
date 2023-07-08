@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:13:04 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/07/08 14:22:21 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/07/08 16:45:23 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,5 +67,7 @@ int	check_separator(t_cmd *cmd);
 char	*remove_quotes(char *cmd);
 // get_redirections is a function that get the redirections from the command and return a table of redirections !
 char	**get_redirections(char *input);
+//split_redir is a function that split the redirections into files and symbols and return a table of files and a table of symbols !
+int	split_redir(t_cmd *cmd);
 
 #endif

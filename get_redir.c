@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 11:17:38 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/07/06 21:38:38 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/07/08 16:55:26 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static int	count_redirections(char *input)
 	sq = 0;
 	dq = 0;
 	count = 0;
-	while (input[i])
+	while (input && input[i])
 	{
 		if (input[i] == '\'' && !dq)
 			sq = !sq;

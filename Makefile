@@ -6,7 +6,7 @@
 #    By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/22 05:40:27 by elakhfif          #+#    #+#              #
-#    Updated: 2023/07/08 14:11:15 by elakhfif         ###   ########.fr        #
+#    Updated: 2023/07/08 16:45:57 by elakhfif         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,8 @@ SRCS	=	main.c\
 		parser.c\
 		remove_quotes.c\
 		checker.c\
+		split_redir.c\
+		get_redir.c\
 
 
 OBJS	=	$(SRCS:.c=.o)

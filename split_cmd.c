@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/07/08 14:10:37 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/07/08 16:49:42 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ t_cmd	*split_cmd(char *input)
 		if (input[0] == '|')
 			input++;
 	}
-	if (check_quoted(result) || check_separator(result))
+	if (check_quoted(result) || check_separator(result) || split_redir(result))
 	{
 		free(result);
 		return (NULL);

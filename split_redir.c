@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 06:30:14 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/07/02 12:40:50 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/07/08 16:56:10 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int	checking_redir(t_cmd *cmd)
 		return (0);
 	ft_putstr_fd("mish: syntax error near unexpected token `", 2);
 	ft_putendl_fd(tmp, 2);
-	free(tmp);
+	//free(tmp);
 	return (1);
 }
 
@@ -75,15 +75,4 @@ int	split_redir(t_cmd *cmd)
 	cmd->redir_symbols[i] = NULL;
 	free(get_redir);
 	return (checking_redir(cmd));
-}
-
-int main()
-{
-	t_cmd *cmd;
-	cmd = (t_cmd *)malloc(sizeof(t_cmd));
-	cmd->cmd = "ls -l > file";
-	split_redir(cmd);
-	printf("%s\n", cmd->redir_files[0]);
-	printf("%s\n", cmd->redir_symbols[0]);
-	return (0);
 }

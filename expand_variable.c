@@ -6,118 +6,137 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 09:52:20 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/07/03 19:34:27 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/07/08 15:30:00 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-static int	next_var(char *str, int i)
+static char	*get_var_name(char *str, int i)
 {
-	while (str[i] && str[i] != ' ' && str[i] != '$' && str[i] != '\"'
-		&& str[i] != '\'' && str[i] != '\\' && str[i] != '\n')
+	char	*var_name;
+	int		j;
+
+	j = 0;
+	var_name = (char *)malloc(sizeof(char) * (i + 1));
+	while (j < i)
+	{
+		var_name[j] = str[j];
+		j++;
+	}
+	var_name[j] = '\0';
+	return (var_name);
+}
+
+static char	*skip_and_replace(char *str, char *wrd0, char *wrd1, int count)
+{
+	char	*tmp;
+	char	*tmp1;
+	char	*new_str;
+
+	if (!str)
+		return (NULL);
+	tmp = ft_substr(str, 0, count);
+	tmp1 = ft_substr(str, count + ft_strlen(wrd0), ft_strlen(str));
+	new_str = ft_strjoin(tmp, wrd1);
+	free(tmp);
+	tmp = ft_strjoin(new_str, tmp1);
+	free(new_str);
+	free(tmp1);
+	return (tmp);
+}
+
+static char	*clean_unused_var(char *str)
+{
+	int	i;
+	int	dq;
+	int	sq;
+
+	i = 0;
+	dq = 0;
+	sq = 0;
+	while (str[i])
+	{
+		if (str[i] == '\"' && !sq)
+			dq = !dq;
+		else if (str[i] == '\'' && !dq)
+			sq = !sq;
+		if (str[i] == '$' && !dq && !sq)
+		{
+			if (str[i + 1] == '\'' || str[i + 1] == '\"')
+				str = skip_and_replace(str, "$", "", i);
+			else if (str[i + 1] == '?')
+				str = skip_and_replace(str, "$?", "", i);
+			else if (str[i + 1] == '$')
+				str = skip_and_replace(str, "$$", "", i);
+		}
+		i++;
+	}
+	return (str);
+}
+
+static int	get_var_len(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str[i] == '?')
+		return (1);
+	while (str[i] && str[i] != ' ' && str[i] != '\'' && str[i] != '\"'
+		&& str[i] != '$' && str[i] != '=' && str[i] != '/')
 		i++;
 	return (i);
 }
 
-static char	*get_var(char *str, int i, int j)
-{
-	char	*var;
-	int		k;
-
-	k = 0;
-	var = (char *)malloc(sizeof(char) * (i - j + 1));
-	while (j < i)
-	{
-		var[k] = str[j];
-		k++;
-		j++;
-	}
-	var[k] = '\0';
-	return (var);
-}
-
-static char	*skip_var(char *str, int i)
-{
-	while (str[i] && str[i] != ' ' && str[i] != '$' && str[i] != '\"'
-		&& str[i] != '\'' && str[i] != '\\' && str[i] != '\n')
-		i++;
-	return (str + i);
-}
-
-static char	*get_var_value(char *var, t_env *env)
+static char	*get_var_value(char *var_name, t_env *env)
 {
 	t_env	*tmp;
 
 	tmp = env;
 	while (tmp)
 	{
-		if (ft_strcmp(tmp->key, var) == 0)
-			return (tmp->value);
+		if (!ft_strcmp(tmp->key, var_name))
+			return (ft_strdup(tmp->value));
 		tmp = tmp->next;
 	}
 	return (NULL);
 }
 
-static char	*ft_strjoin_char(char *s1, char c)
-{
-	char	*str;
-	int		i;
-
-	i = 0;
-	str = (char *)malloc(sizeof(char) * (ft_strlen(s1) + 2));
-	while (s1[i])
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	str[i] = c;
-	str[++i] = '\0';
-	free(s1);
-	return (str);
-}
-
 char		*expand_variable(char *str, t_env *env)
 {
 	int		i;
-	int		j;
-	char	*var;
+	char	*var_name;
 	char	*var_value;
-	char	*new_str;
 
 	i = 0;
-	j = 0;
-	new_str = ft_strdup("");
+	str = clean_unused_var(str);
 	while (str[i])
 	{
-		if (str[i] == '$' && str[i + 1] && str[i + 1] != ' '
-			&& str[i + 1] != '\"' && str[i + 1] != '\''
-			&& str[i + 1] != '\\' && str[i + 1] != '\n')
+		if (str[i] == '$' && str[i + 1] != '\0' && str[i + 1] != ' ')
 		{
-			j = i + 1;
-			i = next_var(str, i + 1);
-			var = get_var(str, i, j);
-			var_value = get_var_value(var, env);
-			new_str = ft_strjoin(new_str, var_value);
-			free(var);
+			var_name = get_var_name(str + i + 1, get_var_len(str + i + 1));
+			var_value = get_var_value(var_name, env);
+			if (var_value)
+				str = skip_and_replace(str, var_name, var_value, i);
+			else
+				str = skip_and_replace(str, var_name, "", i);
+			free(var_name);
+			free(var_value);
 		}
-		else
-			new_str = ft_strjoin_char(new_str, str[i]);
 		i++;
 	}
-	return (new_str);
+	return (str);
 }
 
-int	main(void)
+int main()
 {
-	char	*str;
-	t_env	*env;
+	t_env *env1;
+	char *str;
 
-	env = (t_env *)malloc(sizeof(t_env));
-	env->key = ft_strdup("HOME");
-	env->value = ft_strdup("/Users/elakhfif");
-	env->next = NULL;
-	str = ft_strdup("hello $HOME");
-	printf("%s\n", expand_variable(str, env));
+	env1 = (t_env *)malloc(sizeof(t_env));
+	str = ft_strdup("$? $HOME $PWD $OLDPWD $USER $");
+	printf("str = %s\n", str);
+	str = expand_variable(str, env1);
+	printf("str = %s\n", str);
 	return (0);
 }
