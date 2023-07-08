@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 06:30:14 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/07/08 16:56:10 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/07/08 17:02:03 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	checking_redir(t_cmd *cmd)
 	while (cmd->redir_symbols[++i] && !tmp)
 	{
 		len = ft_strlen(cmd->redir_symbols[i]);
-		if (len <= 2 && (!ft_strncmp("HEREDOC", cmd->redir_symbols[i], len) || !ft_strncmp("APPEND", cmd->redir_symbols[i], len)))
+		if (len <= 2 && (!ft_strncmp("<<", cmd->redir_symbols[i], len) || !ft_strncmp(">>", cmd->redir_symbols[i], len)))
 		{
 			if (!ft_strlen(cmd->redir_files[i]))
 				tmp = "syntax error near unexpected token `newline'";
