@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 05:43:33 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/07/08 16:51:32 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/07/10 20:39:04 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,17 @@ int	main(void)
 		cmds = parser(input);
 		while (cmds)
 		{
-			printf("command is:\t\" %s \"\n", cmds->cmd);
 			i = 0;
 			while (cmds->args[i])
 			{
-				printf("args[%d]is:\t%s\n", i, cmds->args[i]);
+				printf("args[%d] = %s\n", i, cmds->args[i]);
 				i++;
 			}
+			printf("cmd = %s\n", cmds->cmd);
+			printf("redirection file = %s\n", cmds->redir_files[0]);
 			cmds = cmds->next;
 		}
+		cmds = NULL;
 	}
-	return (0);
 }
 

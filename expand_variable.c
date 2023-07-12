@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 09:52:20 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/07/08 15:30:00 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/07/12 19:33:51 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,17 +126,4 @@ char		*expand_variable(char *str, t_env *env)
 		i++;
 	}
 	return (str);
-}
-
-int main()
-{
-	t_env *env1;
-	char *str;
-
-	env1 = (t_env *)malloc(sizeof(t_env));
-	str = ft_strdup("$? $HOME $PWD $OLDPWD $USER $");
-	printf("str = %s\n", str);
-	str = expand_variable(str, env1);
-	printf("str = %s\n", str);
-	return (0);
 }
