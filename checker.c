@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:56:11 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/07/08 14:09:26 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/03 02:34:33 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	check_separator(t_cmd *cmd)
 	{
 		tmp = get_separator(cmd->cmd);
 		if (ft_strlen(tmp) == ft_strlen(cmd->cmd)
-			|| (tmp[0] == '|' && ft_strlen(tmp) == 1))
+			|| (tmp[0] == '|' && cmd->cmd[0] == '|'))
 		{
 			ft_putstr_fd("mish: syntax error near unexpected token `|'\n", 2);
 			free(tmp);
