@@ -6,13 +6,13 @@
 #    By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/22 05:40:27 by elakhfif          #+#    #+#              #
-#    Updated: 2023/07/08 16:45:57 by elakhfif         ###   ########.fr        #
+#    Updated: 2023/09/06 00:54:56 by elakhfif         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	=	minishell
 CC	=	cc
-CFLAGS	=	-Werror -Wextra -Wall -O3
+CFLAGS	=	-Werror -Wextra -Wall -O3 -g -fsanitize=address
 LIBFT	=	./libft/libft.a
 
 SRCS	=	main.c\

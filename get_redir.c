@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 11:17:38 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/07/08 16:55:26 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/06 01:03:35 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,13 @@ static char	*get_redirection(char *input, int *type)
 			sq = !sq;
 		if (input[i] == '\"' && !sq)
 			dq = !dq;
-		if (input[i] == '>' && !sq && !dq)
+		if (ft_strchr("><", input[i]) && !sq && !dq)
 		{
-			if (input[i + 1] == '>')
+			if (input[i] == '>' && input[i + 1] == '>')
 				*type = APPEND;
 			else
-				*type = REDIR_OUT;
-			return (input + i);
+				*type = TRUNC;
+			return (strndup(input, i));
 		}
 		i++;
 	}

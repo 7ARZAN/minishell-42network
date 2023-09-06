@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:13:04 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/07/08 16:45:23 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/06 00:57:30 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,10 @@
 
 enum e_redir
 {
-	REDIR_IN,
-	REDIR_OUT,
+	TRUNC,
 	APPEND,
-	HEREDOC,
-	NONE
+	INPUT,
+	HEREDOC
 };
 
 typedef struct s_env

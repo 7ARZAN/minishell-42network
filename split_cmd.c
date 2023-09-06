@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/07/10 20:32:15 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/06 01:01:56 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,25 +72,45 @@ static int	words_count(char *input)
 	return (count);
 }
 
+static char	*extract_word(char *input, int len)
+{
+	char	*result;
+	int		i;
+
+	i = 0;
+	result = (char *)malloc(sizeof(char) * (len + 1));
+	if (!result)
+		return (NULL);
+	while (i < len)
+	{
+		result[i] = input[i];
+		i++;
+	}
+	result[i] = '\0';
+	return (result);
+}
+
 t_cmd	*split_cmd(char *input)
 {
 	t_cmd	*result;
-	char	*temp;
 
 	result = NULL;
-	while (input && input[0])
+	while (*input)
 	{
-		temp = ft_substr(input, 0, words_count(input));
-		result = add_cmd(result, temp);
-		input = input + words_count(input);
-		if (input[0] == '|')
+		if (*input == '|')
 			input++;
+		while (*input == ' ')
+			input++;
+		if (*input)
+		{
+			if (check_quotes_loop(input))
+				return (NULL);
+			result = add_cmd(result, extract_word(input, words_count(input)));
+			input += words_count(input);
+		}
 	}
-	if (check_quoted(result) || check_separator(result) || split_redir(result) == -1)
-	{
-		free(result);
+	if (check_quoted(result))
 		return (NULL);
-	}
 	return (result);
 }
 

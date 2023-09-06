@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/24 21:21:16 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/06 00:58:42 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int	args_count(char *cmd)
 	int	count;
 
 	count = 0;
-	while (cmd[0])
+	while (cmd && cmd[0])
 	{
 		if (ft_strchr("><", cmd[0]))
 		{

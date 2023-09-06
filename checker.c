@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:56:11 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/03 02:34:33 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/04 02:24:09 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,47 +14,37 @@
 
 static char	*get_separator(char *str)
 {
-	int	i;
-	int	index[3];
-	char	*result;
+	char	*tmp;
+	int	indx[3];
 
-	i = 0;
-	index[0] = 0;
-	index[1] = 0;
-	index[2] = 0;
-	result = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));
-	while (str && str[i])
+	indx[0] = 0;
+	indx[1] = 0;
+	indx[2] = 0;
+	tmp = ft_strdup(str);
+	while (str[indx[0]])
 	{
-		if (str[i] == '>' && str[i + 1] == '>')
-			index[0] = i + 2;
-		else if (str[i] == '>' && str[i + 1] != '>')
-			index[1] = i + 1;
-		else if (str[i] == '|')
-			index[2] = i + 1;
-		i++;
+		if (ft_strchr("\'\"", str[indx[0]]))
+			indx[2] = str[indx[0]];
+		if (str[indx[0]] == '|' && !indx[2])
+			tmp[indx[1]++] = '|';
+		indx[0]++;
 	}
-	if (index[0])
-		result = ft_strcpy(result, str + index[0] - 2);
-	else if (index[1])
-		result = ft_strcpy(result, str + index[1] - 1);
-	else if (index[2])
-		result = ft_strcpy(result, str + index[2] - 1);
-	else
-		result = ft_strcpy(result, str + i);
-	return (result);
+	tmp[indx[1]] = '\0';
+	return (tmp);
 }
 
 int	check_separator(t_cmd *cmd)
 {
 	char	*tmp;
 
-	while (cmd && cmd->next)
+	while (cmd)
 	{
 		tmp = get_separator(cmd->cmd);
-		if (ft_strlen(tmp) == ft_strlen(cmd->cmd)
-			|| (tmp[0] == '|' && cmd->cmd[0] == '|'))
+		if (ft_strlen(tmp) != 0)
 		{
-			ft_putstr_fd("mish: syntax error near unexpected token `|'\n", 2);
+			ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+			ft_putstr_fd(tmp, 2);
+			ft_putstr_fd("'\n", 2);
 			free(tmp);
 			return (1);
 		}
@@ -63,6 +53,7 @@ int	check_separator(t_cmd *cmd)
 		cmd = cmd->next;
 	}
 	return (0);
+
 }
 
 // int	main()

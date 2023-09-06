@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 09:52:20 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/07/12 19:33:51 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/06 01:12:28 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ char		*expand_variable(char *str, t_env *env)
 	str = clean_unused_var(str);
 	while (str[i])
 	{
-		if (str[i] == '$' && str[i + 1] != '\0' && str[i + 1] != ' ')
+		if (str[i] == '$' && !ft_strchr("\'\"", str[i + 1]))
 		{
 			var_name = get_var_name(str + i + 1, get_var_len(str + i + 1));
 			var_value = get_var_value(var_name, env);
@@ -126,4 +126,14 @@ char		*expand_variable(char *str, t_env *env)
 		i++;
 	}
 	return (str);
+}
+
+int	main()
+{
+	char	*str;
+
+	str = ft_strdup("echo $HOME");
+	expand_variable(str, NULL);
+	printf("%s\n", str);
+	return (0);
 }
