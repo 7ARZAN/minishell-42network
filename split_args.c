@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/06 00:58:42 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/12 19:03:32 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,24 +35,24 @@ static char	*next_arg(char *cmd)
 static int	args_count(char *cmd)
 {
 	int	count;
+	int	sq;
+	int	dq;
 
 	count = 0;
-	while (cmd && cmd[0])
+	sq = 0;
+	dq = 0;
+	while (*cmd)
 	{
-		if (ft_strchr("><", cmd[0]))
-		{
-			while (ft_strchr("><", cmd[0]))
-				cmd++;
-			count--;
-		}
-		else if (!ft_strchr("\t |", cmd[0]))
-		{
+		if (*cmd == '\'' && !dq)
+			sq = !sq;
+		else if (*cmd == '\"' && !sq)
+			dq = !dq;
+		else if (*cmd == ' ' && !sq && !dq)
 			count++;
-			cmd = next_arg(cmd);
-		}
-		else
-			cmd++;
+		cmd++;
 	}
+	if (*(cmd - 1) != ' ')
+		count++;
 	return (count);
 }
 
@@ -70,9 +70,14 @@ char	**split_args(char *cmd)
 	{
 		while (cmd[0] && ft_strchr("\t ", cmd[0]))
 			cmd++;
-		if (ft_strchr("><", cmd[0]))
-			while (ft_strchr("\t ><", cmd[0]))
-				cmd++;
+		if (cmd[0] == '\0')
+			break ;
+		if (cmd[0] == '\'' || cmd[0] == '\"')
+		{
+			tmp = ft_substr(cmd, 0, ft_strlen(next_arg(cmd)));
+			result[index++] = remove_quotes(tmp);
+			free(tmp);
+		}
 		else
 		{
 			tmp = ft_substr(cmd, 0,

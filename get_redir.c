@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 11:17:38 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/06 01:03:35 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/12 19:00:14 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,9 @@ static int	count_redirections(char *input)
 			dq = !dq;
 		if (input[i] == '>' && !sq && !dq)
 			count++;
+		if (input[i] == '<' && !sq && !dq)
+			count++;	
 		i++;
-		input = next_redirection(input);
 	}
 	return (count);
 }

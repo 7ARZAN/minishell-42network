@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/06 01:01:56 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/12 19:01:39 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,7 @@ static int	check_quoted(t_cmd *cmd)
 		}
 		if (!cmd->next)
 			break ;
-		else
-			cmd = cmd->next;
+		cmd = cmd->next;
 	}
 	return (0);
 }
@@ -66,6 +65,8 @@ static int	words_count(char *input)
 		if (input[count] == '\"' && !sq)
 			dq = !dq;
 		if (input[count] == '|' && !sq && !dq)
+			return (count);
+		if (input[count] == ' ' && !sq && !dq)
 			return (count);
 		count++;
 	}
