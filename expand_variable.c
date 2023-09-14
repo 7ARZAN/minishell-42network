@@ -6,7 +6,7 @@
 /*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 09:52:20 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/06 01:12:28 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/14 15:14:28 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,8 @@ static char	*clean_unused_var(char *str)
 			sq = !sq;
 		if (str[i] == '$' && !dq && !sq)
 		{
-			if (str[i + 1] == '\'' || str[i + 1] == '\"')
+			if (str[i + 1] == ' ' || str[i + 1] == '\0')
 				str = skip_and_replace(str, "$", "", i);
-			else if (str[i + 1] == '?')
-				str = skip_and_replace(str, "$?", "", i);
-			else if (str[i + 1] == '$')
-				str = skip_and_replace(str, "$$", "", i);
 		}
 		i++;
 	}
@@ -117,23 +113,20 @@ char		*expand_variable(char *str, t_env *env)
 			var_name = get_var_name(str + i + 1, get_var_len(str + i + 1));
 			var_value = get_var_value(var_name, env);
 			if (var_value)
-				str = skip_and_replace(str, var_name, var_value, i);
+				str = skip_and_replace(str, var_name, var_value, i + 1);
 			else
-				str = skip_and_replace(str, var_name, "", i);
+				str = skip_and_replace(str, var_name, "", i + 1);
 			free(var_name);
 			free(var_value);
 		}
 		i++;
 	}
+	printf("var_name = %s\n", var_name);
+	printf("var_value = %s\n", var_value);
 	return (str);
 }
 
 int	main()
 {
-	char	*str;
-
-	str = ft_strdup("echo $HOME");
-	expand_variable(str, NULL);
-	printf("%s\n", str);
-	return (0);
+	printf("%s\n", expand_variable("echo $PATH", NULL));
 }
