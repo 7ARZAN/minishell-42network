@@ -1,15 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirections.c                                     :+:      :+:    :+:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/03 01:59:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/03 02:00:21 by elakhfif         ###   ########.fr       */
+/*   Created: 2023/09/09 08:12:59 by yel-hadr          #+#    #+#             */
+/*   Updated: 2023/09/09 08:21:09 by yel-hadr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#ifndef MINISHELL_H
+# define MINISHELL_H
 
+#include "execute.h"
+#include "parser.h"
+#include "builting.h"
+#include "../include/libft.h"
+
+#endif
 

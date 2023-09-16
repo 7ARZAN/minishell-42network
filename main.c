@@ -3,41 +3,61 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 05:43:33 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/03 02:33:12 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/16 05:51:48 by yel-hadr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "./include/minishell.h"
 
-
-int	main(void)
+int	ft_check_input(char *input)
 {
-	t_cmd	*cmds = NULL;
-  	char	*input;
-	int	i;
-
-  	while (1)
+	while (*input)
 	{
-       		input = readline("minishell$ ");
-		add_history(input);
-		cmds = parser(input);
-		while (cmds)
-		{
-			i = 0;
-			printf("cmd = %s\n", cmds->cmd);
-			while (cmds->args[i])
-			{
-				printf("args[%d] = %s\n", i, cmds->args[i]);
-				i++;
-			}
-			cmds = cmds->next;
-		}
-		free(input);
-		cmds = NULL;
+		if (*input != ' ' && *input != '\t')
+			return (1);
+		input++;
 	}
 	return (0);
 }
 
+int	main(int argc, char **argv, char **envp)
+{
+	(void)argc;
+	(void)argv;
+	t_cmd	*cmds;
+	char	*input;
+	t_list *env;
+	g_exit_status = 0;
+	signal(SIGINT, ft_handler);
+	signal(SIGQUIT, SIG_IGN);
+	env = ft_dupenvp(envp);
+	
+  	while (1)
+	{
+		if (!env || !env->content)
+		{
+			printf("minishell: fatal error: env is empty\n");
+			exit(1);
+		}
+		input = readline("minishell > ");
+		if (!input)
+		{
+			printf("exit minishell\n");
+			exit(0);
+		}
+		else if (ft_check_input(input))
+		{
+			add_history(input);
+			cmds = parser(input, env);
+			g_exit_status = ft_pipe(cmds, env);
+		}
+		if (input)
+			free(input);
+		
+	}
+
+	return (0);
+}

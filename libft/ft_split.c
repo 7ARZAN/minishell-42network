@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 20:12:59 by elakhfif          #+#    #+#             */
-/*   Updated: 2022/10/18 23:34:03 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/13 06:42:07 by yel-hadr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../include/libft.h"
 
 static size_t	count_words(char const *s, char c)
 {
@@ -38,7 +38,7 @@ char	**ft_split(char const *s, char c)
 	size_t	end;
 	size_t	i;
 
-	split = (char **)malloc((count_words(s, c) + 1) * (sizeof(char *)));
+	split = (char **)ft_calloc((count_words(s, c) + 1) , (sizeof(char *)));
 	if (!split)
 		return (NULL);
 	start = 0;

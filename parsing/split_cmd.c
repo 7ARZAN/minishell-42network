@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   split_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/12 19:01:39 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/16 23:41:40 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../include/parser.h"
 
 static int	check_quotes_loop(char *str)
 {
@@ -43,7 +43,8 @@ static int	check_quoted(t_cmd *cmd)
 		}
 		if (!cmd->next)
 			break ;
-		cmd = cmd->next;
+		else
+			cmd = cmd->next;
 	}
 	return (0);
 }
@@ -66,52 +67,30 @@ static int	words_count(char *input)
 			dq = !dq;
 		if (input[count] == '|' && !sq && !dq)
 			return (count);
-		if (input[count] == ' ' && !sq && !dq)
-			return (count);
 		count++;
 	}
 	return (count);
 }
 
-static char	*extract_word(char *input, int len)
-{
-	char	*result;
-	int		i;
-
-	i = 0;
-	result = (char *)malloc(sizeof(char) * (len + 1));
-	if (!result)
-		return (NULL);
-	while (i < len)
-	{
-		result[i] = input[i];
-		i++;
-	}
-	result[i] = '\0';
-	return (result);
-}
-
 t_cmd	*split_cmd(char *input)
 {
 	t_cmd	*result;
+	char	*temp;
 
 	result = NULL;
-	while (*input)
+	while (input && input[0])
 	{
-		if (*input == '|')
+		temp = ft_substr(input, 0, words_count(input));
+		result = add_cmd(result, temp);
+		input = input + words_count(input);
+		if (input[0] == '|')
 			input++;
-		while (*input == ' ')
-			input++;
-		if (*input)
-		{
-			if (check_quotes_loop(input))
-				return (NULL);
-			result = add_cmd(result, extract_word(input, words_count(input)));
-			input += words_count(input);
-		}
 	}
-	if (check_quoted(result))
+	if (check_quoted(result) || check_separator(result) || check_redirections(result))
+	{
+		free(result);
 		return (NULL);
+	}
 	return (result);
 }
 

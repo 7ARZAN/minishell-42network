@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   split_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/12 19:03:32 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/14 09:46:16 by yel-hadr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../include/parser.h"
 
 static char	*next_arg(char *cmd)
 {
@@ -35,48 +35,87 @@ static char	*next_arg(char *cmd)
 static int	args_count(char *cmd)
 {
 	int	count;
-	int	sq;
-	int	dq;
 
 	count = 0;
-	sq = 0;
-	dq = 0;
 	while (*cmd)
 	{
-		if (*cmd == '\'' && !dq)
-			sq = !sq;
-		else if (*cmd == '\"' && !sq)
-			dq = !dq;
-		else if (*cmd == ' ' && !sq && !dq)
+		if (!ft_strchr("\t |<>", cmd[0]))
+		{
 			count++;
-		cmd++;
+			cmd = next_arg(cmd);
+		}
+		else if (ft_strchr("><", cmd[0]))
+		{
+			while (ft_strchr("><", cmd[0]))
+				cmd++;
+		}
+		else
+			cmd++;
 	}
-	if (*(cmd - 1) != ' ')
-		count++;
 	return (count);
 }
 
-char	**split_args(char *cmd)
+int ft_get_redir_file(char *input, t_cmd *cmd, t_redir_type type)
 {
-	int		index;
+	char *tmp;
+	int i;
+	
+	i = 0;
+	if (type == NONE)
+		return (0);
+	if ((type == REDIR_OUT || type == APPEND) && cmd->redir_out.file)
+		free(cmd->redir_out.file);
+	else if ((type == REDIR_IN || type == HEREDOC) && cmd->redir_in.file)
+		free(cmd->redir_in.file);
+	tmp = ft_substr(input, 0, ft_strlen(input) - ft_strlen(next_arg(input)));
+	if (type == REDIR_OUT || type == APPEND)
+	{
+		cmd->redir_out.file = remove_quotes(tmp);
+		i = ft_redir_open(cmd->redir_out.file, type, cmd);
+	}
+	else if (type == REDIR_IN || type == HEREDOC)
+	{
+		cmd->redir_in.file = remove_quotes(tmp);
+		i = ft_redir_open(cmd->redir_in.file, type, cmd);
+	}
+	return (i);
+}
+
+
+char	**split_args(char *cmd , t_cmd *command)
+{
 	int		count;
 	char	*tmp;
 	char	**result;
-
+	int		index;
+	(void)command;
+	
 	index = 0;
 	count = args_count(cmd);
 	result = ft_calloc(count + 1, sizeof(char *));
-	while (index < count)
+	command->redir_in.type = NONE;
+	command->redir_out.type = NONE;
+	command->redir_in.file = NULL;
+	command->redir_out.file = NULL;
+	while (count)
 	{
 		while (cmd[0] && ft_strchr("\t ", cmd[0]))
 			cmd++;
-		if (cmd[0] == '\0')
-			break ;
-		if (cmd[0] == '\'' || cmd[0] == '\"')
+		if (ft_strchr(">", *cmd))
 		{
-			tmp = ft_substr(cmd, 0, ft_strlen(next_arg(cmd)));
-			result[index++] = remove_quotes(tmp);
-			free(tmp);
+			command->redir_out.type = get_redir_type(cmd);
+			while (ft_strchr("> \t", *cmd))
+				cmd++;
+			ft_get_redir_file(cmd, command, command->redir_out.type);
+			count--;
+		}
+		else if (ft_strchr("<", *cmd))
+		{
+			command->redir_in.type = get_redir_type(cmd);
+			while (ft_strchr("< \t", *cmd))
+				cmd++;
+			ft_get_redir_file(cmd, command, command->redir_in.type);
+			count--;
 		}
 		else
 		{
@@ -84,10 +123,11 @@ char	**split_args(char *cmd)
 					(ft_strlen(cmd) - ft_strlen(next_arg(cmd))));
 			result[index++] = remove_quotes(tmp);
 			free(tmp);
+			count--;
 		}
+		tmp = NULL;
 		cmd = next_arg(cmd);
 	}
-	result[index] = NULL;
 	return (result);
 }
 

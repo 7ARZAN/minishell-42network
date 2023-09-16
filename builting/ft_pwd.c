@@ -1,32 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/22 05:46:27 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/07/10 20:31:36 by elakhfif         ###   ########.fr       */
+/*   Created: 2023/06/17 12:38:14 by yel-hadr          #+#    #+#             */
+/*   Updated: 2023/09/09 08:22:08 by yel-hadr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../include/builting.h"
 
-t_cmd	*parser(char *line)
+int ft_pwd(void)
 {
-	t_cmd	*result;
-	t_cmd	*cmd;
+	char *pwd;
 
-	if (!line)
-		return (NULL);
-	result = split_cmd(line);
-	cmd = result;
-	while (cmd)
-	{
-		cmd->args = split_args(cmd->cmd);
-		cmd = cmd->next;
-	}
-	return (result);
+	pwd = getcwd(NULL, 0);
+	ft_putendl_fd(pwd, 1);
+	free(pwd);
+	return (0);
 }
-
-

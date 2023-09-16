@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   all_wrds_replace.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 08:19:13 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/26 05:06:07 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/13 06:42:56 by yel-hadr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../include/libft.h"
 
 static int	new_str_len(char *str, char *fword, char *sword)
 {
@@ -43,7 +43,7 @@ static char	*replaced_str(char *str, char *fwd, char *swd)
 	size_t	len;
 
 	len = new_str_len(str, fwd, swd);
-	res = (char *)malloc(sizeof(char) * (len + 1));
+	res = (char *)ft_calloc(sizeof(char) , (len + 1));
 	if (!res)
 		return (NULL);
 	res[len] = '\0';

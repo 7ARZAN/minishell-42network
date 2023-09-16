@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   wd_replace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 07:19:11 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/06/24 16:53:18 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/13 06:42:47 by yel-hadr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../include/libft.h"
 
 static int	new_strlen(char *str, char *fword, char *sword)
 {
@@ -38,7 +38,7 @@ static char	*replaced_str(char *str, char *fword, char *sword)
 	size_t	new_len;
 
 	new_len = new_strlen(str, fword, sword);
-	new_str = (char *)malloc(sizeof(char) * (new_len + 1));
+	new_str = (char *)ft_calloc(sizeof(char) , (new_len + 1));
 	if (!new_str)
 		return (NULL);
 	count = 0;

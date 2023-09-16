@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 14:18:06 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/07/08 16:15:50 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/13 06:39:39 by yel-hadr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../include/parser.h"
 
 static int	ms_match(char *wildcard, char *filename)
 {
@@ -113,7 +113,7 @@ char		**ms_wildcard(char *wildcard)
 
 	i = 0;
 	j = 0;
-	tab = (char **)malloc(sizeof(char *) * (ms_filenumber() + 1));
+	tab = (char **)ft_calloc(sizeof(char *) * (ms_filenumber() + 1));
 	tab = ms_filltab(tab, i);
 	while (tab[i])
 	{
@@ -133,7 +133,7 @@ int main()
 {
 	char **tab;
 	int i = 0;
-	tab = ms_wildcard("*.c");
+	tab = ms_wildcard("*.d");
 	while (tab[i])
 	{
 		printf("%s\n", tab[i]);

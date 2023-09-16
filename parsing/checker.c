@@ -3,34 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   checker.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elakhfif <elakhfif@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:56:11 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/04 02:24:09 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/16 23:45:17 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../include/parser.h"
 
 static char	*get_separator(char *str)
 {
-	char	*tmp;
-	int	indx[3];
+	int	i;
+	char	*result;
 
-	indx[0] = 0;
-	indx[1] = 0;
-	indx[2] = 0;
-	tmp = ft_strdup(str);
-	while (str[indx[0]])
+	i = 0;
+	result = (char *)ft_calloc(sizeof(char) , (ft_strlen(str) + 1));
+	while (str && str[i])
 	{
-		if (ft_strchr("\'\"", str[indx[0]]))
-			indx[2] = str[indx[0]];
-		if (str[indx[0]] == '|' && !indx[2])
-			tmp[indx[1]++] = '|';
-		indx[0]++;
+		if (ft_strchr("|", str[i]))
+		{
+			result[i] = str[i];
+			return (result);
+		}
+		i++;
 	}
-	tmp[indx[1]] = '\0';
-	return (tmp);
+	return (result);
 }
 
 int	check_separator(t_cmd *cmd)
@@ -40,11 +38,11 @@ int	check_separator(t_cmd *cmd)
 	while (cmd)
 	{
 		tmp = get_separator(cmd->cmd);
-		if (ft_strlen(tmp) != 0)
+		ft_strtrim(tmp, " ");
+		if (ft_strlen(tmp) == ft_strlen(cmd->cmd)
+			|| (tmp[0] == '|' && ft_strlen(tmp) == 1))
 		{
-			ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
-			ft_putstr_fd(tmp, 2);
-			ft_putstr_fd("'\n", 2);
+			ft_putstr_fd("mish: syntax error near unexpected token `|'\n", 2);
 			free(tmp);
 			return (1);
 		}
@@ -53,7 +51,33 @@ int	check_separator(t_cmd *cmd)
 		cmd = cmd->next;
 	}
 	return (0);
+}
 
+int	check_redirections(t_cmd *cmd)
+{
+	int	i;
+	int	index;
+
+	i = 0;
+	index = 0;
+	while (cmd)
+	{
+		while (cmd->cmd[i])
+		{
+			if (ft_strchr("><", cmd->cmd[i]))
+				index++;
+			i++;
+		}
+		if (index > 2)
+		{
+			ft_putstr_fd("mish: syntax error near unexpected token `newline'\n", 2);
+			return (1);
+		}
+		index = 0;
+		i = 0;
+		cmd = cmd->next;
+	}
+	return (0);
 }
 
 // int	main()
