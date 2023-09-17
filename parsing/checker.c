@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:56:11 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/17 03:15:36 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/17 06:14:25 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,25 +52,6 @@ int	check_separator(t_cmd *cmd)
 	return (0);
 }
 
-static char	*redir_syntax_error(char *str)
-{
-	int	i;
-	char	*result;
-
-	i = 0;
-	result = (char *)ft_calloc(sizeof(char) , (ft_strlen(str) + 1));
-	while (str && str[i])
-	{
-		if (ft_strchr("><", str[i]))
-		{
-			result[i] = str[i];
-			return (result);
-		}
-		i++;
-	}
-	return (result);
-}
-
 int	check_redirections(t_cmd *cmd)
 {
 	int	i;
@@ -86,8 +67,7 @@ int	check_redirections(t_cmd *cmd)
 				index++;
 			i++;
 		}
-		if (index > 2 || redir_syntax_error(cmd->cmd)[0] == '>'
-			|| redir_syntax_error(cmd->cmd)[0] == '<')
+		if (index > 2 || (index == 2 && ft_strlen(cmd->cmd) == 1) || (index == 1 && ft_strlen(cmd->cmd) == 1))
 		{
 			ft_putstr_fd("mish: syntax error near unexpected token `newline'\n", 2);
 			return (1);
