@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:56:11 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/22 23:39:10 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/24 18:29:33 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ int	check_redirections(t_cmd *cmd)
 				index++;
 			i++;
 		}
-		if (index > 2 || (index == 2 && ft_strchr("><", cmd->cmd[0])) || (index == 2 && ft_strchr("><", cmd->cmd[ft_strlen(cmd->cmd) - 1])))
+		if (index > 2 || ((index == 2 && ft_strchr("><", cmd->cmd[0]) && (cmd->cmd[2] && !HEREDOC))
+				|| (index == 2 && ft_strchr("><", cmd->cmd[ft_strlen(cmd->cmd) - 1]))))
 		{
 			ft_putstr_fd("mish: syntax error near unexpected token `newline'\n", 2);
 			return (1);
