@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 05:43:33 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/17 06:23:44 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/01 01:38:41 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	main(int argc, char **argv, char **envp)
 			printf("minishell: fatal error: env is empty\n");
 			exit(1);
 		}
-		input = readline("mish > ");
+		input = readline("\033[1;32mmish$ \033[0m");
 		if (!input)
 		{
 			printf("exit\n");
@@ -56,8 +56,7 @@ int	main(int argc, char **argv, char **envp)
 			g_exit_status = ft_pipe(cmds, env);
 		}
 		if (input)
-			free(input);
-		
+			free(input);	
 	}
 
 	return (0);

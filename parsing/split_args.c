@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/14 09:46:16 by yel-hadr         ###   ########.fr       */
+/*   Updated: 2023/10/01 01:36:12 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,11 @@ static int	args_count(char *cmd)
 	return (count);
 }
 
-int ft_get_redir_file(char *input, t_cmd *cmd, t_redir_type type)
+int	ft_get_redir_file(char *input, t_cmd *cmd, t_redir_type type)
 {
-	char *tmp;
-	int i;
-	
+	int		i;
+	char	*tmp;
+
 	i = 0;
 	if (type == NONE)
 		return (0);
@@ -81,22 +81,31 @@ int ft_get_redir_file(char *input, t_cmd *cmd, t_redir_type type)
 	return (i);
 }
 
-
-char	**split_args(char *cmd , t_cmd *command)
+static void	redir_init(t_cmd *command)
 {
-	int		count;
-	char	*tmp;
-	char	**result;
-	int		index;
-	(void)command;
-	
-	index = 0;
-	count = args_count(cmd);
-	result = ft_calloc(count + 1, sizeof(char *));
 	command->redir_in.type = NONE;
 	command->redir_out.type = NONE;
 	command->redir_in.file = NULL;
 	command->redir_out.file = NULL;
+}
+
+static void	ft_skip_spaces(char **cmd)
+{
+	while (ft_strchr(" \t", **cmd))
+		(*cmd)++;
+}
+char	**split_args(char *cmd, t_cmd *command)
+{
+	int		index;
+	int		count;
+	char	*tmp;
+	char	**result;
+
+	(void)command;
+	index = 0;
+	count = args_count(cmd);
+	result = ft_calloc(count + 1, sizeof(char *));
+	redir_init(command);
 	while (count)
 	{
 		while (cmd[0] && ft_strchr("\t ", cmd[0]))
@@ -119,14 +128,13 @@ char	**split_args(char *cmd , t_cmd *command)
 		}
 		else
 		{
-			tmp = ft_substr(cmd, 0,
-					(ft_strlen(cmd) - ft_strlen(next_arg(cmd))));
-			result[index++] = remove_quotes(tmp);
-			free(tmp);
+			tmp = next_arg(cmd);
+			result[index] = ft_substr(cmd, 0, ft_strlen(cmd) - ft_strlen(tmp));
+			cmd = tmp;
+			index++;
 			count--;
 		}
-		tmp = NULL;
-		cmd = next_arg(cmd);
+		ft_skip_spaces(&cmd);
 	}
 	return (result);
 }

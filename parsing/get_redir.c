@@ -6,24 +6,24 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 11:17:38 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/14 07:40:59 by yel-hadr         ###   ########.fr       */
+/*   Updated: 2023/09/30 22:43:59 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/parser.h"
 
-t_redir_type get_redir_type(char *input)
+t_redir_type	get_redir_type(char *input)
 {
+	t_redir_type	type;
 	int		i;
 	int		sq;
 	int		dq;
-	t_redir_type type;
 
 	i = 0;
 	sq = 0;
 	dq = 0;
 	type = NONE;
-	while (input[i])
+	while (input && input[i])
 	{
 		if (input[i] == '\'' && !dq)
 			sq = !sq;
@@ -50,14 +50,14 @@ t_redir_type get_redir_type(char *input)
 
 char	*ft_get_heredoc(char *heredoc)
 {
-	char *tmp;
-	char *line;
-	
+	char	*tmp;
+	char	*line;
+
 	tmp = NULL;
 	line = NULL;
 	while (1)
 	{
-		line = readline("heredoc > ");
+		line = readline("[42heredoc] > ");
 		if (!ft_strcmp(line, heredoc))
 			break ;
 		tmp = ft_strjoin(tmp, line);
@@ -67,9 +67,9 @@ char	*ft_get_heredoc(char *heredoc)
 	return (tmp);
 }
 
-int ft_redir_open(char *file, t_redir_type type, t_cmd *cmd)
+int	ft_redir_open(char *file, t_redir_type type, t_cmd *cmd)
 {
-	int fd;
+	int	fd;
 
 	fd = 0;
 	if (type == REDIR_OUT)
