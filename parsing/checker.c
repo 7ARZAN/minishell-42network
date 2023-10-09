@@ -6,99 +6,43 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:56:11 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/24 18:29:33 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/09 00:14:25 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/parser.h"
 
-static char	*get_separator(char *str)
+void	syntax_error(char *str)
 {
-	int	i;
-	char	*result;
-
-	i = 0;
-	result = (char *)ft_calloc(sizeof(char) , (ft_strlen(str) + 1));
-	while (str && str[i])
-	{
-		if (ft_strchr("|", str[i]))
-		{
-			result[i] = str[i];
-			return (result);
-		}
-		i++;
-	}
-	return (result);
+	ft_putstr_fd("mish: syntax error near unexpected token `", 2);
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd("'\n", 2);
 }
 
 int	check_separator(t_cmd *cmd)
 {
-	char	*tmp;
-
-	while (cmd)
-	{
-		tmp = get_separator(cmd->cmd);
-		ft_strtrim(tmp, " ");
-		if (ft_strlen(tmp) == ft_strlen(cmd->cmd)
-			|| (tmp[0] == '|' && ft_strlen(tmp) == 1))
-		{
-			ft_putstr_fd("mish: syntax error near unexpected token `|'\n", 2);
-			free(tmp);
-			return (1);
-		}
-		free(tmp);
-		cmd = cmd->next;
-	}
-	return (0);
-}
-
-int	check_redirections(t_cmd *cmd)
-{
-	int	i;
-	int	index;
+	char	*str;
+	int		i;
 
 	i = 0;
-	index = 0;
-	while (cmd)
+	str = cmd->cmd;
+	while (str[i])
 	{
-		while (cmd->cmd[i])
+		if (str[i] == '|' && str[i + 1] == '|')
 		{
-			if (ft_strchr("><", cmd->cmd[i]))
-				index++;
+			syntax_error("|");
+			return (1);
+		}
+		else if (str[i] == '|')
+		{
 			i++;
+			if (!(*str))
+			{
+				syntax_error("|");
+				return (1);
+			}
 		}
-		if (index > 2 || ((index == 2 && ft_strchr("><", cmd->cmd[0]) && (cmd->cmd[2] && !HEREDOC))
-				|| (index == 2 && ft_strchr("><", cmd->cmd[ft_strlen(cmd->cmd) - 1]))))
-		{
-			ft_putstr_fd("mish: syntax error near unexpected token `newline'\n", 2);
-			return (1);
-		}
-		else if (index == 1 && ft_strchr("><", cmd->cmd[0]))
-		{
-			ft_putstr_fd("mish: syntax error near unexpected token `newline'\n", 2);
-			return (1);
-		}
-		index = 0;
-		i = 0;
-		cmd = cmd->next;
+		i++;
 	}
 	return (0);
 }
-
-// int	main()
-// {
-// 	char	*line;
-// 	t_cmd	*cmds;
-//
-// 	line = "hello | there | hey there > file | cat < file | cat > file";
-// 	cmds = split_cmd(line);
-// 	while (cmds)
-// 	{
-// 		if (check_separator(cmds) == 1)
-// 			return (1);
-// 		printf("cmd: %s\n", cmds->cmd);
-// 		printf("sepator: %s\n", cmds->sep);
-// 		cmds = cmds->next;
-// 	}
-// 	return (0);
-// }

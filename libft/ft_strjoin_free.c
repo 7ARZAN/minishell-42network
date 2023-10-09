@@ -1,22 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_error.c                                         :+:      :+:    :+:   */
+/*   ft_strjoin_free.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
+/*   By: yel-hadr <yel-hadr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/13 19:12:52 by yel-hadr          #+#    #+#             */
-/*   Updated: 2023/09/09 08:30:15 by yel-hadr         ###   ########.fr       */
+/*   Created: 2023/06/15 21:39:55 by yel-hadr          #+#    #+#             */
+/*   Updated: 2023/10/08 05:25:01 by yel-hadr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/execute.h"
+#include "../include/libft.h"
 
-int ft_error(char *cmd, char *error)
+char	*ft_strjoin_free(char *s1, char *s2)
 {
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd(cmd, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putendl_fd(error, STDERR_FILENO);
-	return (1);
+	char	*str;
+
+	str = ft_strjoin(s1, s2);
+	if (s1)
+		free(s1);
+	return (str);
 }

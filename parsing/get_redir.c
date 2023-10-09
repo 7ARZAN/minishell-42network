@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 11:17:38 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/30 22:43:59 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/09/24 07:21:08 by yel-hadr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 t_redir_type	get_redir_type(char *input)
 {
+	int				i;
+	int				sq;
+	int				dq;
 	t_redir_type	type;
-	int		i;
-	int		sq;
-	int		dq;
 
 	i = 0;
 	sq = 0;
 	dq = 0;
 	type = NONE;
-	while (input && input[i])
+	while (input[i])
 	{
 		if (input[i] == '\'' && !dq)
 			sq = !sq;
@@ -48,26 +48,7 @@ t_redir_type	get_redir_type(char *input)
 	return (type);
 }
 
-char	*ft_get_heredoc(char *heredoc)
-{
-	char	*tmp;
-	char	*line;
-
-	tmp = NULL;
-	line = NULL;
-	while (1)
-	{
-		line = readline("[42heredoc] > ");
-		if (!ft_strcmp(line, heredoc))
-			break ;
-		tmp = ft_strjoin(tmp, line);
-		tmp = ft_strjoin(tmp, "\n");
-		free(line);
-	}
-	return (tmp);
-}
-
-int	ft_redir_open(char *file, t_redir_type type, t_cmd *cmd)
+int	ft_redir_open(char *file, t_redir_type type)
 {
 	int	fd;
 
@@ -78,10 +59,6 @@ int	ft_redir_open(char *file, t_redir_type type, t_cmd *cmd)
 		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else if (type == REDIR_IN)
 		fd = open(file, O_RDONLY);
-	else if (type == HEREDOC)
-		cmd->redir_in.file = ft_get_heredoc(file);
-	if (type == HEREDOC)
-		free(file);
 	if (fd != -1 && type != HEREDOC)
 		close(fd);
 	return (fd);

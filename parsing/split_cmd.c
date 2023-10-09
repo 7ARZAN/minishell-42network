@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/10/01 01:37:25 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/09 03:51:59 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ static int	check_quoted(t_cmd *cmd)
 		if (check_quotes_loop(cmd->cmd))
 		{
 			ft_putstr_fd("mish: Warning: quotes not closed\n", 2);
+			free(cmd->cmd);
 			return (1);
 		}
 		if (!cmd->next)
@@ -51,7 +52,6 @@ static int	check_quoted(t_cmd *cmd)
 
 static int	words_count(char *input)
 {
-
 	int	count;
 	int	sq;
 	int	dq;
@@ -72,46 +72,40 @@ static int	words_count(char *input)
 	return (count);
 }
 
-t_cmd	*split_cmd(char *input, int *exit_status)
+t_cmd	*split_cmd(char *input, int *status)
 {
-	t_cmd	*result;
-	char	*temp;
+	t_cmd	*cmd;
+	t_cmd	*tmp;
+	int		i;
+	int		j;
 
-	result = NULL;
-	while (input && input[0])
+	i = 0;
+	j = 0;
+	cmd = NULL;
+	while (input && input[i])
 	{
-		temp = ft_substr(input, 0, words_count(input));
-		result = add_cmd(result, temp);
-		input = input + words_count(input);
-		if (input[0] == '|')
-			input++;
+		j = words_count(input + i);
+		tmp = new_cmd(ft_substr(input, i, j));
+		add_cmd_back(&cmd, tmp);
+		i += j;
+		if (input[i] == '|')
+		{
+			i++;
+			if (!input[i])
+			{
+				ft_putstr_fd("mish: syntax error near unexpected token `|'\n",
+					2);
+				*status = 1;
+				free_cmd(cmd);
+				return (NULL);
+			}
+		}
 	}
-	if (check_quoted(result) || check_separator(result) == 1 || check_redirections(result) == 1)
+	if (check_quoted(cmd))
 	{
-		*exit_status = 258;
-		free(result);
+		*status = 1;
+		free(cmd);
 		return (NULL);
 	}
-	return (result);
+	return (cmd);
 }
-
-// int	main(int ac, char **av)
-// {
-// 	t_cmd	*cmd;
-// 	int	err;
-//
-// 	err = 0;
-// 	if (ac == 2 && av[1])
-// 	{
-// 		cmd = split_cmd(av[1]);
-// 		printf("[whole command is]:\t%s\n", av[1]);
-// 		while (cmd)
-// 		{
-// 			printf("[command is]:\t%s\n", cmd->cmd);
-// 			if (!cmd->next)
-// 				break ;
-// 			cmd = cmd->next;
-// 		}
-// 	}
-// 	return (0);
-// }
