@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 09:52:20 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/10/09 05:25:21 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/10 17:42:06 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,8 @@ char	*expand_variable(char *str, t_list *env, int *exit_status)
 			if (!val)
 				val = strdup("");
 			new_str = ft_strjoin(new_str, val);
-			free(val);
 			free(var);
+			free(val);
 		}
 		else
 		{

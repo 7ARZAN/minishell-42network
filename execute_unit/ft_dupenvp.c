@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 09:47:33 by yel-hadr          #+#    #+#             */
-/*   Updated: 2023/09/18 06:01:29 by yel-hadr         ###   ########.fr       */
+/*   Updated: 2023/10/10 17:33:03 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ char	**ft_lst_to_char(t_list *envp_list)
 		}
 		envp_list = envp_list->next;
 	}
+
 	return (envp);
 }
 

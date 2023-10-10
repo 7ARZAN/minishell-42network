@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/10/09 03:51:59 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/10 17:18:54 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,12 @@ static int	words_count(char *input)
 	return (count);
 }
 
+void	skip_wspaces(char *input, int *i)
+{
+	while (input[*i] == ' ' || input[*i] == '\t')
+		(*i)++;
+}
+
 t_cmd	*split_cmd(char *input, int *status)
 {
 	t_cmd	*cmd;
@@ -91,7 +97,8 @@ t_cmd	*split_cmd(char *input, int *status)
 		if (input[i] == '|')
 		{
 			i++;
-			if (!input[i])
+			skip_wspaces(input, &i);
+			if (!input[i] || input[i] == '|')
 			{
 				ft_putstr_fd("mish: syntax error near unexpected token `|'\n",
 					2);
