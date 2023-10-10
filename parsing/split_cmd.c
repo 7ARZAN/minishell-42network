@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/10/09 03:51:59 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/10 15:37:45 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,17 @@ static int	words_count(char *input)
 			sq = !sq;
 		if (input[count] == '\"' && !sq)
 			dq = !dq;
-		if (input[count] == '|' && !sq && !dq)
+		if (ft_strchr("|", *input) && !sq && !dq)
 			return (count);
 		count++;
 	}
 	return (count);
+}
+
+static void	skip_spaces(char *input, int *i)
+{
+	while (input[*i] == ' ')
+		(*i)++;
 }
 
 t_cmd	*split_cmd(char *input, int *status)
@@ -78,6 +84,7 @@ t_cmd	*split_cmd(char *input, int *status)
 	t_cmd	*tmp;
 	int		i;
 	int		j;
+	t_redir_type	tmp2;
 
 	i = 0;
 	j = 0;
@@ -91,7 +98,8 @@ t_cmd	*split_cmd(char *input, int *status)
 		if (input[i] == '|')
 		{
 			i++;
-			if (!input[i])
+			skip_spaces(input, &i);
+			if (!input[i] || input[i] == '|')
 			{
 				ft_putstr_fd("mish: syntax error near unexpected token `|'\n",
 					2);
@@ -104,8 +112,7 @@ t_cmd	*split_cmd(char *input, int *status)
 	if (check_quoted(cmd))
 	{
 		*status = 1;
-		free(cmd);
-		return (NULL);
+		return (free_cmd(cmd), NULL);
 	}
 	return (cmd);
 }
