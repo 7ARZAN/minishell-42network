@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 09:52:20 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/10/09 05:25:21 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/11 10:24:36 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,6 @@ static char	*get_var(char *str, int i, int j)
 	var[k] = '\0';
 	return (var);
 }
-
-// static char	*skip_var(char *str, int i)
-// {
-// 	while (str[i] && str[i] != ' ' && str[i] != '$' && str[i] != '\"'
-// 		&& str[i] != '\'' && str[i] != '\\' && str[i] != '\n')
-// 		i++;
-// 	return (str + i);
-// }
 
 static char	*ft_strjoin_char(char *s1, char c)
 {
@@ -107,9 +99,9 @@ char	*expand_variable(char *str, t_list *env, int *exit_status)
 			val = ft_getval(var, env);
 			if (!val)
 				val = strdup("");
-			new_str = ft_strjoin(new_str, val);
-			free(val);
+			new_str = ft_strjoin_free(new_str, val);
 			free(var);
+			free(val);
 		}
 		else
 		{

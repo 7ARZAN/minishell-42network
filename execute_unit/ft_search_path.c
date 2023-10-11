@@ -6,7 +6,7 @@
 /*   By: yel-hadr <yel-hadr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 16:10:37 by yel-hadr          #+#    #+#             */
-/*   Updated: 2023/10/08 05:04:15 by yel-hadr         ###   ########.fr       */
+/*   Updated: 2023/10/10 17:35:57 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*ft_getval(char *var, t_list *envp)
 		return (NULL);
 	tmp = ft_getenv(var, envp);
 	if (tmp)
-		return (strdup(tmp + ft_strlen(var) + 1));
+		return (ft_strdup(tmp + ft_strlen(var) + 1));
 	return (NULL);
 }
 

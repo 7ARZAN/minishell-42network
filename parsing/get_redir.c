@@ -6,11 +6,12 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 11:17:38 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/09/24 07:21:08 by yel-hadr         ###   ########.fr       */
+/*   Updated: 2023/10/11 08:31:29 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/parser.h"
+
 
 t_redir_type	get_redir_type(char *input)
 {
@@ -25,22 +26,30 @@ t_redir_type	get_redir_type(char *input)
 	type = NONE;
 	while (input[i])
 	{
-		if (input[i] == '\'' && !dq)
-			sq = !sq;
-		if (input[i] == '\"' && !sq)
-			dq = !dq;
 		if (input[i] == '>' && !sq && !dq)
 		{
+			if (input[i + 1] == '<')
+				type = -1;
 			type = REDIR_OUT;
-			if (input[i + 1] == '>')
+			i++;
+			if (input[i++] == '>')
 				type = APPEND;
+			skip_wspaces(input, &i);
+			if (!input[i] || ft_strchr("<>", input[i]))
+				type = ERROR;
 			return (type);
 		}
 		if (input[i] == '<' && !sq && !dq)
 		{
-			type = REDIR_IN;
-			if (input[i + 1] == '<')
+			if (input[i + 1] == '>')
+				type = -1;
+			type = REDIR_OUT;
+			i++;
+			if (input[i++] == '<')
 				type = HEREDOC;
+			skip_wspaces(input, &i);
+			if (!input[i] || ft_strchr("<>", input[i]))
+				type = ERROR;
 			return (type);
 		}
 		i++;

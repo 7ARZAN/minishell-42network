@@ -1,12 +1,12 @@
 /* ************************************************************************** */
-/*                                                                            */
+	/*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:13:04 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/10/09 00:39:27 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/11 10:27:28 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef enum e_redir
 	REDIR_OUT,
 	APPEND,
 	HEREDOC,
+	ERROR,
 	NONE,
 }	t_redir_type;
 
@@ -46,7 +47,6 @@ typedef struct s_cmd
 	char			**args;
 	t_redir			redir_in;
 	t_redir			redir_out;
-	char			*sep;
 	struct s_cmd	*next;
 }				t_cmd;
 
@@ -67,9 +67,8 @@ char			*get_host_name(void);
 char			*get_branch_name(void);
 char			*prompt_msg(void);
 int				split_args(t_cmd *command, t_list *env);
-int				check_separator(t_cmd *cmd);
 int				ft_redir_open(char *file, t_redir_type type);
-int				check_redirections(t_cmd *cmd);
 char			**ms_wildcard(char *wildcard);
+void	skip_wspaces(char *input, int *i);
 
 #endif

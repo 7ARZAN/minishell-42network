@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/10/10 15:37:45 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/11 02:43:23 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,16 +65,16 @@ static int	words_count(char *input)
 			sq = !sq;
 		if (input[count] == '\"' && !sq)
 			dq = !dq;
-		if (ft_strchr("|", *input) && !sq && !dq)
+		if (input[count] == '|' && !sq && !dq)
 			return (count);
 		count++;
 	}
 	return (count);
 }
 
-static void	skip_spaces(char *input, int *i)
+void	skip_wspaces(char *input, int *i)
 {
-	while (input[*i] == ' ')
+	while (input[*i] == ' ' || input[*i] == '\t')
 		(*i)++;
 }
 
@@ -84,7 +84,6 @@ t_cmd	*split_cmd(char *input, int *status)
 	t_cmd	*tmp;
 	int		i;
 	int		j;
-	t_redir_type	tmp2;
 
 	i = 0;
 	j = 0;
@@ -98,7 +97,7 @@ t_cmd	*split_cmd(char *input, int *status)
 		if (input[i] == '|')
 		{
 			i++;
-			skip_spaces(input, &i);
+			skip_wspaces(input, &i);
 			if (!input[i] || input[i] == '|')
 			{
 				ft_putstr_fd("mish: syntax error near unexpected token `|'\n",
@@ -112,7 +111,8 @@ t_cmd	*split_cmd(char *input, int *status)
 	if (check_quoted(cmd))
 	{
 		*status = 1;
-		return (free_cmd(cmd), NULL);
+		free(cmd);
+		return (NULL);
 	}
 	return (cmd);
 }

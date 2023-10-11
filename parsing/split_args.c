@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/10/10 15:39:52 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/11 06:20:58 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,8 @@ int	split_args(t_cmd *command, t_list *env)
 			cmd++;
 		if (ft_strchr(">", *cmd))
 		{
+			if (get_redir_type(cmd) == ERROR)
+				return (ft_error("syntax error near unexpected token `>'", NULL));
 			command->redir_out.type = get_redir_type(cmd);
 			while (ft_strchr("> \t", *cmd))
 				cmd++;
@@ -131,6 +133,8 @@ int	split_args(t_cmd *command, t_list *env)
 		}
 		else if (ft_strchr("<", *cmd))
 		{
+			if (get_redir_type(cmd) == ERROR)
+				return (ft_error("syntax error near unexpected token `<'", NULL));
 			command->redir_in.type = get_redir_type(cmd);
 			while (ft_strchr("< \t", *cmd))
 				cmd++;
