@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
+/*   By: yel-hadr <yel-hadr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 14:18:06 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/10/09 01:10:06 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/12 11:39:52 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/parser.h"
 
-// match is function to check if the wildcard match the filename or not and return 1 if it match and 0 if not !
 static int	ms_match(char *wildcard, char *filename)
 {
 	int	i;
@@ -41,7 +40,6 @@ static int	ms_match(char *wildcard, char *filename)
 	return (0);
 }
 
-// filenumber is function to count the number of files in the directory without the hidden files
 static int	ms_filenumber(void)
 {
 	DIR				*dir;
@@ -50,9 +48,10 @@ static int	ms_filenumber(void)
 
 	i = 0;
 	dir = opendir(".");
+	sd = readdir(dir);
 	if (dir == NULL)
 		return (0);
-	while ((sd = readdir(dir)) != NULL)
+	while (sd != NULL)
 	{
 		if (sd->d_name[0] != '.')
 			i++;
@@ -61,17 +60,16 @@ static int	ms_filenumber(void)
 	return (i);
 }
 
-// fill the tab is function to fill the tab with the files in the directory without the hidden files
-// DIR is a structure that contains information about a directory, and struct dirent is a structure that contains information about an directory entry.
-static char **ms_filltab(char **tab, int i)
+static char	**ms_filltab(char **tab, int i)
 {
 	DIR				*dir;
 	struct dirent	*sd;
 
 	dir = opendir(".");
+	sd = readdir(dir);
 	if (dir == NULL)
 		return (NULL);
-	while ((sd = readdir(dir)) != NULL)
+	while (sd != NULL)
 	{
 		if (sd->d_name[0] != '.')
 		{
@@ -83,7 +81,6 @@ static char **ms_filltab(char **tab, int i)
 	return (tab);
 }
 
-// sort the tab is function to sort the tab in alphabetical order
 static char	**ms_sorttab(char **tab)
 {
 	int		i;
@@ -91,7 +88,7 @@ static char	**ms_sorttab(char **tab)
 	char	*tmp;
 
 	i = 0;
-	while (tab[i])
+	while (tab && tab[i])
 	{
 		j = i;
 		while (tab[j])
@@ -109,7 +106,6 @@ static char	**ms_sorttab(char **tab)
 	return (tab);
 }
 
-// wildcard is function to return the tab of the files that match the wildcard
 char	**ms_wildcard(char *wildcard)
 {
 	char	**tab;
@@ -120,7 +116,7 @@ char	**ms_wildcard(char *wildcard)
 	j = 0;
 	tab = (char **)ft_calloc(sizeof(char *) * (ms_filenumber() + 1), 1);
 	tab = ms_filltab(tab, i);
-	while (tab[i])
+	while (tab && tab[i])
 	{
 		if (ms_match(wildcard, tab[i]))
 		{
@@ -132,18 +128,4 @@ char	**ms_wildcard(char *wildcard)
 	tab[j] = NULL;
 	tab = ms_sorttab(tab);
 	return (tab);
-}
-int	main(void)
-{
-	char	**tab;
-	int		i;
-
-	i = 0;
-	tab = ms_wildcard("*");
-	while (tab[i])
-	{
-		printf("%s\n", tab[i]);
-		i++;
-	}
-	return (0);
 }

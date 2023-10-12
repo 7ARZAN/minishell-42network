@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 05:43:33 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/10/11 03:30:04 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/12 01:49:13 by yel-hadr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,27 +37,20 @@ char	*ft_prompt(t_list *env)
 	user = ft_getval("USER", env);
 	tmp = getcwd(NULL, 0);
 	dir = ft_strrchr(tmp, '/');
-	if (!dir)
+	if (!user || !dir)
+		return (ft_strdup(GRN "minishell > " RESET));
+	else if (!*(dir + 1))
 		dir = tmp;
 	else
 		dir++;
-	if (!user || !dir)
-		result = ft_strdup(GRN "minishell > " RESET);
-	else
-	{
-		result = ft_strjoin(GRN, user);
-		result = ft_strjoin_free(result, RESET);
-		result = ft_strjoin_free(result, " : ");
-		result = ft_strjoin_free(result, BLU);
-		result = ft_strjoin_free(result, dir);
-		result = ft_strjoin_free(result, RESET);
-		result = ft_strjoin_free(result, " > ");
-	}
-	if (user)
-		free(user);
-	if (tmp)
-		free(tmp);
-	return (result);
+	result = ft_strjoin(GRN, user);
+	result = ft_strjoin_free(result, RESET);
+	result = ft_strjoin_free(result, " : ");
+	result = ft_strjoin_free(result, BLU);
+	result = ft_strjoin_free(result, dir);
+	result = ft_strjoin_free(result, RESET);
+	result = ft_strjoin_free(result, " > ");
+	return (free(user), free(tmp), result);
 }
 
 char	*ft_check_error(t_list *env)
@@ -114,11 +107,9 @@ int		g_sig;
 int	main(int argc, char **argv, char **envp)
 {
 	t_cmd	*cmds;
-	char	*input;
 	t_list	*env;
 	int		status;
-	int		save_stdin;
-	int		save_stdout;
+	int		fd[2];
 
 	(void)argc;
 	(void)argv;
@@ -129,12 +120,11 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		g_sig = 0;
-		input = ft_check_error(env);
-		ft_save_fd(&save_stdin, &save_stdout);
-		cmds = parser(input, env, &status);
-		ft_restore_fd(save_stdin, save_stdout);
+		ft_save_fd(&fd[0], &fd[1]);
+		cmds = parser(ft_check_error(env), env, &status);
 		if (!status && !g_sig)
 			status = ft_pipe(cmds, env);
+		ft_restore_fd(fd[0], fd[1]);
 		if (cmds)
 			ft_free_cmds(cmds);
 	}

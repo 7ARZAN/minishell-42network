@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_search_path.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yel-hadr <yel-hadr@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 16:10:37 by yel-hadr          #+#    #+#             */
-/*   Updated: 2023/10/10 17:35:57 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/12 01:13:44 by yel-hadr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*ft_getval(char *var, t_list *envp)
 		return (NULL);
 	tmp = ft_getenv(var, envp);
 	if (tmp)
-		return (ft_strdup(tmp + ft_strlen(var) + 1));
+		return (strdup(tmp + ft_strlen(var) + 1));
 	return (NULL);
 }
 
@@ -60,6 +60,32 @@ static char	*ft_search_path(char **exe, char **path_split)
 	return (NULL);
 }
 
+static char	*ft_do_abspath(char **exe)
+{
+	DIR	*dir;
+
+	dir = opendir(*exe);
+	if (dir)
+	{
+		ft_error(*exe, "Is a directory");
+		closedir(dir);
+		exit(126);
+	}
+	if (!access(*exe, F_OK))
+	{
+		if (!access(*exe, X_OK))
+			return (*exe);
+		ft_error(*exe, strerror(errno));
+		exit(126);
+	}
+	else
+	{
+		ft_error(*exe, strerror(errno));
+		exit(127);
+	}
+	return (NULL);
+}
+
 char	*is_cmd_exists(char **exe, t_list *envp)
 {
 	char	*path;
@@ -68,13 +94,10 @@ char	*is_cmd_exists(char **exe, t_list *envp)
 	if (!*exe || !exe)
 		return (NULL);
 	if (**exe == '/' || **exe == '.')
-	{
-		if (!access(*exe, F_OK))
-			if (!access(*exe, X_OK))
-				return (*exe);
-		return (NULL);
-	}
+		return (ft_do_abspath(exe));
 	path = ft_getval("PATH", envp);
+	if (!path)
+		return (NULL);
 	path_split = ft_split(path, ':');
 	free(path);
 	path = ft_search_path(exe, path_split);

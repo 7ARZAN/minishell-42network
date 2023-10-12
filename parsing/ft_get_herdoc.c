@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_get_herdoc.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
+/*   By: yel-hadr <yel-hadr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 03:21:35 by yel-hadr          #+#    #+#             */
-/*   Updated: 2023/10/07 07:32:22 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/09 15:52:41 by yel-hadr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,14 @@ char	*ft_get_heredoc(char *heredoc, t_list *env)
 	{
 		line = readline("> ");
 		if (!ft_strcmp(line, heredoc) || !line || g_sig == -2)
+		{
+			free(line);
 			break ;
+		}
 		if (expand && ft_strchr(line, '$'))
 			line = expand_variable(line, env, NULL);
-		tmp = ft_strjoin(tmp, line);
-		tmp = ft_strjoin(tmp, "\n");
+		tmp = ft_strjoin_free(tmp, line);
+		tmp = ft_strjoin_free(tmp, "\n");
 		if (line)
 			free(line);
 	}

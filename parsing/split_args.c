@@ -3,86 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   split_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
+/*   By: yel-hadr <yel-hadr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/10/11 06:20:58 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/12 16:55:52 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/parser.h"
-
-static char	*next_arg(char *cmd)
-{
-	int	i;
-	int	sq;
-	int	dq;
-
-	i = 0;
-	sq = 0;
-	dq = 0;
-	while (cmd[i] && (!ft_strchr("\t |<>", cmd[i]) || sq || dq))
-	{
-		if (cmd[i] == '\'' && !dq)
-			sq = !sq;
-		else if (cmd[i] == '\"' && !sq)
-			dq = !dq;
-		i++;
-	}
-	return (cmd + i);
-}
-
-static int	args_count(char *cmd)
-{
-	int	count;
-
-	count = 0;
-	while (*cmd)
-	{
-		if (!ft_strchr("\t |<>", cmd[0]))
-		{
-			count++;
-			cmd = next_arg(cmd);
-		}
-		else if (ft_strchr("><", cmd[0]))
-		{
-			while (ft_strchr("><", cmd[0]))
-				cmd++;
-		}
-		else
-			cmd++;
-	}
-	return (count);
-}
-
-int	ft_get_redir_file(char *input, t_cmd *cmd, t_redir_type type, t_list *env)
-{
-	char	*tmp;
-	int		i;
-
-	i = 0;
-	if (type == NONE)
-		return (0);
-	if ((type == REDIR_OUT || type == APPEND) && cmd->redir_out.file)
-		free(cmd->redir_out.file);
-	else if ((type == REDIR_IN || type == HEREDOC) && cmd->redir_in.file)
-		free(cmd->redir_in.file);
-	tmp = ft_substr(input, 0, ft_strlen(input) - ft_strlen(next_arg(input)));
-	if (type == REDIR_OUT || type == APPEND)
-	{
-		cmd->redir_out.file = remove_quotes(tmp);
-		i = ft_redir_open(cmd->redir_out.file, type);
-	}
-	else if (type == REDIR_IN)
-	{
-		cmd->redir_in.file = remove_quotes(tmp);
-		i = ft_redir_open(cmd->redir_in.file, type);
-	}
-	else if (type == HEREDOC)
-		cmd->redir_in.file = ft_get_heredoc(tmp, env);
-	free(tmp);
-	return (i);
-}
 
 static char	*ft_do_args(char *cmd, int *count)
 {
@@ -97,13 +25,58 @@ static char	*ft_do_args(char *cmd, int *count)
 	return (result);
 }
 
+static int	ft_get_outfile(char **tmp, t_cmd *command, t_list *env, int *count)
+{
+	char	*cmd;
+
+	cmd = *tmp;
+	command->redir_out.type = get_redir_type(cmd);
+	if (command->redir_out.type == ERROR)
+	{
+		ft_putstr_fd("minishell: syntax error\n", 2);
+		return (1);
+	}
+	while (ft_strchr("> \t", *cmd))
+		cmd++;
+	if (ft_get_redir_file(cmd, command, command->redir_out.type, env) == -1)
+	{
+		ft_error(command->redir_out.file, strerror(errno));
+		return (1);
+	}
+	*tmp = cmd;
+	(*count)--;
+	return (0);
+}
+
+static int	ft_get_infile(char **tmp, t_cmd *command, t_list *env, int *count)
+{
+	char	*cmd;
+
+	cmd = *tmp;
+	command->redir_in.type = get_redir_type(cmd);
+	if (command->redir_in.type == ERROR)
+	{
+		ft_putstr_fd("minishell: syntax error\n", 2);
+		return (1);
+	}
+	while (ft_strchr("< \t", *cmd))
+		cmd++;
+	if (ft_get_redir_file(cmd, command, command->redir_in.type, env) == -1)
+	{
+		ft_error(command->redir_in.file, strerror(errno));
+		return (1);
+	}
+	*tmp = cmd;
+	(*count)--;
+	return (0);
+}
+
 int	split_args(t_cmd *command, t_list *env)
 {
 	int		count;
 	char	*cmd;
 	int		index;
 
-	index = 0;
 	count = args_count(command->cmd);
 	command->args = ft_calloc(count + 1, sizeof(char *));
 	cmd = command->cmd;
@@ -111,41 +84,28 @@ int	split_args(t_cmd *command, t_list *env)
 	command->redir_out.type = NONE;
 	command->redir_in.file = NULL;
 	command->redir_out.file = NULL;
+	index = ft_strlen(command->cmd) - 1;
+	while (ft_strchr(" \t", command->cmd[index]))
+		index--;
+	if (ft_strchr("<>", command->cmd[index]))
+	{
+		ft_putstr_fd("minishell: syntax error\n", 2);
+		return (1);
+	}
+	index = 0;
 	while (count)
 	{
 		while (cmd[0] && ft_strchr("\t ", cmd[0]))
 			cmd++;
 		if (ft_strchr(">", *cmd))
 		{
-			if (get_redir_type(cmd) == ERROR)
-				return (ft_error("syntax error near unexpected token `>'", NULL));
-			command->redir_out.type = get_redir_type(cmd);
-			while (ft_strchr("> \t", *cmd))
-				cmd++;
-			if (ft_get_redir_file(cmd, command, command->redir_out.type, env) ==
-				-1)
-			{
-				ft_error(command->redir_out.file, strerror(errno));
+			if (ft_get_outfile(&cmd, command, env, &count))
 				return (1);
-			}
-			next_arg(cmd);
-			count--;
 		}
 		else if (ft_strchr("<", *cmd))
 		{
-			if (get_redir_type(cmd) == ERROR)
-				return (ft_error("syntax error near unexpected token `<'", NULL));
-			command->redir_in.type = get_redir_type(cmd);
-			while (ft_strchr("< \t", *cmd))
-				cmd++;
-			if (ft_get_redir_file(cmd, command, command->redir_in.type, env) ==
-				-1)
-			{
-				ft_error(command->redir_in.file, strerror(errno));
+			if (ft_get_infile(&cmd, command, env, &count))
 				return (1);
-			}
-			next_arg(cmd);
-			count--;
 		}
 		else
 		{
@@ -154,6 +114,5 @@ int	split_args(t_cmd *command, t_list *env)
 		}
 		cmd = next_arg(cmd);
 	}
-	ft_get_redir_file(NULL, command, NONE, env);
 	return (0);
 }

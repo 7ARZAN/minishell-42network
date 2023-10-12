@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
+/*   By: yel-hadr <yel-hadr@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 05:46:27 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/10/10 17:20:12 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/12 16:40:38 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ t_cmd	*parser(char *line, t_list *env, int *status)
 		*status = split_args(tmp, env);
 		tmp = tmp->next;
 	}
+	free(line);
 	if (g_sig == -1)
 		g_sig = 0;
-	free(line);
 	return (result);
 }

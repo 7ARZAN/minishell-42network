@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 08:39:16 by yel-hadr          #+#    #+#             */
-/*   Updated: 2023/09/23 23:43:14 by yel-hadr         ###   ########.fr       */
+/*   Updated: 2023/10/11 07:06:13 by lhorbax          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,13 @@ static int	ft_check_if_var(char *str)
 
 static int	ft_varcmp(char *s1, char *s2)
 {
-	if (!ft_strncmp(s1, s2, ft_strlen(s2)) && \
-			(s1[ft_strlen(s2)] == '=' || !s1[ft_strlen(s2)]))
+	if (!ft_strncmp(s1, s2, ft_strlen(s2)) && (s1[ft_strlen(s2)] == '='
+			|| !s1[ft_strlen(s2)]))
 		return (0);
 	return (1);
 }
 
-static int	ft_lstremove_if(t_list **head, void *data_ref, int (*cmp)(), \
-		void (*free_fct)(void *))
+static int	ft_lstremove_if(t_list **head, void *data_ref, int (*cmp)())
 {
 	t_list	*tmp;
 	t_list	*prev;
@@ -46,11 +45,12 @@ static int	ft_lstremove_if(t_list **head, void *data_ref, int (*cmp)(), \
 		if (!cmp(tmp->content, data_ref))
 		{
 			if (prev)
+			{
 				prev->next = tmp->next;
+				ft_lstdelone(tmp, free);
+			}
 			else
 				*head = tmp->next;
-			free_fct(tmp->content);
-			free(tmp);
 			return (1);
 		}
 		prev = tmp;
@@ -69,7 +69,7 @@ int	ft_unset(char **args, t_list **env)
 		if (ft_check_if_var(args[i]))
 			ft_error("unset", "not a valid identifier");
 		else
-			ft_lstremove_if(env, args[i], ft_varcmp, free);
+			ft_lstremove_if(env, args[i], ft_varcmp);
 		i++;
 	}
 	return (0);

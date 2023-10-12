@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:06:49 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/10/11 02:43:23 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/12 16:39:40 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,21 +94,11 @@ t_cmd	*split_cmd(char *input, int *status)
 		tmp = new_cmd(ft_substr(input, i, j));
 		add_cmd_back(&cmd, tmp);
 		i += j;
-		if (input[i] == '|')
-		{
-			i++;
-			skip_wspaces(input, &i);
-			if (!input[i] || input[i] == '|')
-			{
-				ft_putstr_fd("mish: syntax error near unexpected token `|'\n",
-					2);
-				*status = 1;
-				free_cmd(cmd);
-				return (NULL);
-			}
-		}
+		if (check_syntax(input, status) == NULL)
+			return (free_cmd(cmd), NULL);
+		i++;
 	}
-	if (check_quoted(cmd))
+	if (check_quoted(cmd) || check_syntax(input, status) == NULL)
 	{
 		*status = 1;
 		free(cmd);
