@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 09:15:39 by yel-hadr          #+#    #+#             */
-/*   Updated: 2023/10/10 03:35:35 by yel-hadr         ###   ########.fr       */
+/*   Updated: 2023/10/13 03:31:24 by elakhfif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,23 @@ static int	ft_wait_pid(int *status, t_cmd *tmp, int pid)
 {
 	int	sig_status;
 
-	waitpid(pid, status, 0);
-	while (tmp->next)
+	sig_status = 0;
+	while (tmp)
 	{
-		waitpid(-1, NULL, 0);
+		waitpid(pid, status, 0);
+		if (WIFEXITED(*status))
+			sig_status = WEXITSTATUS(*status);
+		else if (WIFSIGNALED(*status))
+		{
+			sig_status = WTERMSIG(*status);
+			if (sig_status == SIGQUIT)
+				ft_putstr_fd("Quit: 3\n", 2);
+			else if (sig_status == SIGINT)
+				ft_putstr_fd("\n", 2);
+		}
 		tmp = tmp->next;
 	}
-	g_sig = 0;
-	if (WIFSIGNALED(*status))
-	{
-		sig_status = *status >> 8;
-		return (WEXITSTATUS(sig_status) + 128);
-	}
-	return (*status >> 8);
+	return (sig_status);
 }
 
 static int	ft_do_parent(int *fd, int fd_in)
