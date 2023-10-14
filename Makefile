@@ -1,6 +1,6 @@
 NAME	=	minishell
 CC	=	cc
-CFLAGS	= #-Werror -Wextra -Wall -O3  -g #-fsanitize=address
+CFLAGS	= -Werror -Wextra -Wall -O3  -g #-fsanitize=address
 
 UTILS	=	minishell_utils.a
 
@@ -9,9 +9,8 @@ EXECUTION_SRCS	=	execute_unit/ft_execute.c execute_unit/ft_search_path.c execute
 					execute_unit/ft_signal.c
 
 PARSING_SRCS	=	parsing/split_cmd.c parsing/struct_cmd.c parsing/split_args.c\
-					parsing/parser.c parsing/remove_quotes.c parsing/checker.c\
 					parsing/get_redir.c parsing/expand_variable.c parsing/ft_get_herdoc.c\
-					parsing/wildcards.c parsing/utils_split_args.c\
+					parsing/parser.c parsing/remove_quotes.c parsing/utile_split_args.c\
 
 LIBFT_SRCS		=	libft/ft_isalpha.c libft/ft_isdigit.c libft/ft_isalnum.c libft/ft_isascii.c libft/ft_isprint.c\
 					libft/ft_putchar_fd.c libft/ft_putstr_fd.c libft/ft_putendl_fd.c libft/ft_strlen.c libft/ft_memcpy.c\

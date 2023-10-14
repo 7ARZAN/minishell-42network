@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_args.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yel-hadr <yel-hadr@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:41:52 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/10/12 16:55:52 by elakhfif         ###   ########.fr       */
+/*   Updated: 2023/10/13 06:30:49 by yel-hadr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,13 @@ static int	ft_get_outfile(char **tmp, t_cmd *command, t_list *env, int *count)
 	command->redir_out.type = get_redir_type(cmd);
 	if (command->redir_out.type == ERROR)
 	{
-		ft_putstr_fd("minishell: syntax error\n", 2);
+		ft_putstr_fd("minishell: syntax error near unexpected token `>'\n", 2);
 		return (1);
 	}
 	while (ft_strchr("> \t", *cmd))
 		cmd++;
-	if (ft_get_redir_file(cmd, command, command->redir_out.type, env) == -1)
+	if (ft_get_redir_file(cmd, command, command->redir_out.type, \
+		env) == -1)
 	{
 		ft_error(command->redir_out.file, strerror(errno));
 		return (1);
@@ -56,12 +57,13 @@ static int	ft_get_infile(char **tmp, t_cmd *command, t_list *env, int *count)
 	command->redir_in.type = get_redir_type(cmd);
 	if (command->redir_in.type == ERROR)
 	{
-		ft_putstr_fd("minishell: syntax error\n", 2);
+		ft_putstr_fd("minishell: syntax error near unexpected token `<'\n", 2);
 		return (1);
 	}
 	while (ft_strchr("< \t", *cmd))
 		cmd++;
-	if (ft_get_redir_file(cmd, command, command->redir_in.type, env) == -1)
+	if (ft_get_redir_file(cmd, command, command->redir_in.type, \
+		env) == -1)
 	{
 		ft_error(command->redir_in.file, strerror(errno));
 		return (1);
@@ -77,41 +79,22 @@ int	split_args(t_cmd *command, t_list *env)
 	char	*cmd;
 	int		index;
 
+	index = 0;
 	count = args_count(command->cmd);
 	command->args = ft_calloc(count + 1, sizeof(char *));
 	cmd = command->cmd;
-	command->redir_in.type = NONE;
-	command->redir_out.type = NONE;
-	command->redir_in.file = NULL;
-	command->redir_out.file = NULL;
-	index = ft_strlen(command->cmd) - 1;
-	while (ft_strchr(" \t", command->cmd[index]))
-		index--;
-	if (ft_strchr("<>", command->cmd[index]))
-	{
-		ft_putstr_fd("minishell: syntax error\n", 2);
-		return (1);
-	}
-	index = 0;
 	while (count)
 	{
-		while (cmd[0] && ft_strchr("\t ", cmd[0]))
-			cmd++;
-		if (ft_strchr(">", *cmd))
+		cmd += skip_wspace(cmd, 0);
+		if (ft_strchr("><", *cmd))
 		{
-			if (ft_get_outfile(&cmd, command, env, &count))
-				return (1);
-		}
-		else if (ft_strchr("<", *cmd))
-		{
-			if (ft_get_infile(&cmd, command, env, &count))
+			if (((*cmd == '>' && ft_get_outfile(&cmd, command, env, &count))
+					|| (*cmd == '<' && ft_get_infile(&cmd, command, env, \
+					&count))))
 				return (1);
 		}
 		else
-		{
 			command->args[index++] = ft_do_args(cmd, &count);
-			next_arg(cmd);
-		}
 		cmd = next_arg(cmd);
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: yel-hadr < yel-hadr@student.1337.ma>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 05:43:33 by elakhfif          #+#    #+#             */
-/*   Updated: 2023/10/12 01:49:13 by yel-hadr         ###   ########.fr       */
+/*   Updated: 2023/10/13 06:47:29 by yel-hadr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,39 +25,10 @@ void	ft_free_array(char **array)
 	free(array);
 }
 
-char	*ft_prompt(t_list *env)
-{
-	char	*user;
-	char	*dir;
-	char	*tmp;
-	char	*result;
-
-	dir = NULL;
-	result = NULL;
-	user = ft_getval("USER", env);
-	tmp = getcwd(NULL, 0);
-	dir = ft_strrchr(tmp, '/');
-	if (!user || !dir)
-		return (ft_strdup(GRN "minishell > " RESET));
-	else if (!*(dir + 1))
-		dir = tmp;
-	else
-		dir++;
-	result = ft_strjoin(GRN, user);
-	result = ft_strjoin_free(result, RESET);
-	result = ft_strjoin_free(result, " : ");
-	result = ft_strjoin_free(result, BLU);
-	result = ft_strjoin_free(result, dir);
-	result = ft_strjoin_free(result, RESET);
-	result = ft_strjoin_free(result, " > ");
-	return (free(user), free(tmp), result);
-}
-
 char	*ft_check_error(t_list *env)
 {
 	char	*input;
 	char	*result;
-	char	*prompt;
 
 	input = NULL;
 	result = NULL;
@@ -66,8 +37,7 @@ char	*ft_check_error(t_list *env)
 		ft_putstr_fd("minishell: fatal error: ", 2);
 		exit(1);
 	}
-	prompt = ft_prompt(env);
-	input = readline(prompt);
+	input = readline(GRN "minishell > " RESET);
 	if (!input)
 	{
 		printf("exit\n");
@@ -77,8 +47,6 @@ char	*ft_check_error(t_list *env)
 	result = ft_strtrim(input, " \t");
 	if (input)
 		free(input);
-	if (prompt)
-		free(prompt);
 	return (result);
 }
 
