@@ -12,63 +12,54 @@
 
 #include "../include/parser.h"
 
-static char	*ft_do_args(char *cmd, int *count)
+static char	*extract_argument(char *cmd, int *count)
 {
 	char	*tmp;
 	char	*result;
 
-	tmp = NULL;
-	tmp = ft_substr(cmd, 0, (ft_strlen(cmd) - ft_strlen(next_arg(cmd))));
+	tmp = ft_substr(cmd, 0, (ft_strlen(cmd) - ft_strlen(find_next_argument(cmd))));
 	result = remove_quotes(tmp);
 	(*count)--;
 	free(tmp);
 	return (result);
 }
 
-static int	ft_get_outfile(char **tmp, t_cmd *command, t_list *env, int *count)
+static int	handle_outfile(char **cmd, t_cmd *cmd_struct, t_list *env, int *count)
 {
-	char	*cmd;
-
-	cmd = *tmp;
-	command->redir_out.type = get_redir_type(cmd);
-	if (command->redir_out.type == ERROR)
+	cmd_struct->redir_out.type = get_redir_type(*cmd);
+	if (cmd_struct->redir_out.type == ERROR)
 	{
 		ft_putstr_fd("minishell: syntax error near unexpected token `>'\n", 2);
 		return (1);
 	}
-	while (ft_strchr("> \t", *cmd))
-		cmd++;
-	if (ft_get_redir_file(cmd, command, command->redir_out.type, \
+	while (ft_strchr("> \t", **cmd))
+		(*cmd)++;
+	if (extract_redir_file(*cmd, cmd_struct, cmd_struct->redir_out.type, \
 		env) == -1)
 	{
-		ft_error(command->redir_out.file, strerror(errno));
+		ft_error(cmd_struct->redir_out.file, strerror(errno));
 		return (1);
 	}
-	*tmp = cmd;
 	(*count)--;
 	return (0);
 }
 
-static int	ft_get_infile(char **tmp, t_cmd *command, t_list *env, int *count)
+static int	handle_infile(char **cmd, t_cmd *cmd_struct, t_list *env, int *count)
 {
-	char	*cmd;
-
-	cmd = *tmp;
-	command->redir_in.type = get_redir_type(cmd);
-	if (command->redir_in.type == ERROR)
+	cmd_struct->redir_in.type = get_redir_type(*cmd);
+	if (cmd_struct->redir_in.type == ERROR)
 	{
 		ft_putstr_fd("minishell: syntax error near unexpected token `<'\n", 2);
 		return (1);
 	}
-	while (ft_strchr("< \t", *cmd))
-		cmd++;
-	if (ft_get_redir_file(cmd, command, command->redir_in.type, \
+	while (ft_strchr("< \t", **cmd))
+		(*cmd)++;
+	if (extract_redir_file(*cmd, cmd_struct, cmd_struct->redir_in.type, \
 		env) == -1)
 	{
-		ft_error(command->redir_in.file, strerror(errno));
+		ft_error(cmd_struct->redir_in.file, strerror(errno));
 		return (1);
 	}
-	*tmp = cmd;
 	(*count)--;
 	return (0);
 }
@@ -82,20 +73,22 @@ int	split_args(t_cmd *command, t_list *env)
 	index = 0;
 	count = args_count(command->cmd);
 	command->args = ft_calloc(count + 1, sizeof(char *));
+	if (!command->args)
+		return (1);
 	cmd = command->cmd;
 	while (count)
 	{
 		cmd += skip_wspace(cmd, 0);
 		if (ft_strchr("><", *cmd))
 		{
-			if (((*cmd == '>' && ft_get_outfile(&cmd, command, env, &count))
-					|| (*cmd == '<' && ft_get_infile(&cmd, command, env, \
+			if (((*cmd == '>' && handle_outfile(&cmd, command, env, &count))
+					|| (*cmd == '<' && handle_infile(&cmd, command, env, \
 					&count))))
 				return (1);
 		}
 		else
-			command->args[index++] = ft_do_args(cmd, &count);
-		cmd = next_arg(cmd);
+			command->args[index++] = extract_argument(cmd, &count);
+		cmd = find_next_argument(cmd);
 	}
 	return (0);
 }

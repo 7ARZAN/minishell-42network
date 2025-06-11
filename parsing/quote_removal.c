@@ -12,25 +12,6 @@
 
 #include "../include/parser.h"
 
-// static char	*ft_strjoin_char(char *s1, char c)
-// {
-// 	char	*res;
-// 	int		i;
-
-// 	i = 0;
-// 	res = ft_calloc(ft_strlen(s1) + 2, sizeof(char));
-// 	if (!res)
-// 		return (NULL);
-// 	while (s1 && s1[i])
-// 	{
-// 		res[i] = s1[i];
-// 		i++;
-// 	}
-// 	res[i] = c;
-// 	free(s1);
-// 	return (res);
-// }
-
 char	*remove_quotes(char *cmd)
 {
 	int		i;

@@ -63,12 +63,12 @@ t_cmd			*parser(char *line, t_list *env, int *status);
 char			*remove_quotes(char *cmd);
 char			**get_redirections(char *input);
 char			*expand_variable(char *str, t_list *env, int *exit_status);
-char			*ft_get_heredoc(char *heredoc, t_list *env);
+char			*get_heredoc(char *delim, t_list *env);
 int				split_args(t_cmd *command, t_list *env);
-int				ft_redir_open(char *file, t_redir_type type);
-char			*next_arg(char *cmd);
+int				open_redir_file(char *filename, t_redir_type type);
+char			*find_next_argument(char *cmd);
 int				args_count(char *cmd);
-int				ft_get_redir_file(char *input, t_cmd *cmd, t_redir_type type, \
+int				extract_redir_file(char *input, t_cmd *cmd, t_redir_type type, \
 					t_list *env);
 int				skip_wspace(char *input, int i);
 

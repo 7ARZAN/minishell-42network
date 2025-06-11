@@ -12,68 +12,62 @@
 
 #include "../include/parser.h"
 
-static int	ft_check_expand(char *str)
+static int	needs_expansion(char *delim)
 {
-	if (!str)
+	if (!delim || !ft_strchr(delim, '$'))
 		return (0);
-	if (!ft_strchr(str, '$'))
-		return (0);
-	while (*str)
+	while (*delim)
 	{
-		if (ft_strchr("\'\"", *str))
+		if (ft_strchr("\'\"", *delim))
 			return (1);
-		str++;
+		delim++;
 	}
 	return (0);
 }
 
-static char	*ft_remove_quotes(char *str)
+static char	*strip_heredoc_quotes(char *delim)
 {
-	char	*tmp;
+	char	*unquoted_delim;
 
-	if (!str)
-		return (NULL);
-	if (!ft_strchr(str, '\'') && !ft_strchr(str, '\"'))
-		return (str);
-	tmp = remove_quotes(str);
-	free(str);
-	return (tmp);
+	if (!delim || (!ft_strchr(delim, '\'') && !ft_strchr(delim, '\"')))
+		return (delim);
+	unquoted_delim = remove_quotes(delim);
+	free(delim);
+	return (unquoted_delim);
 }
 
-static char	*ft_getline_h(char *heredoc, int expand, t_list *env)
+static char	*read_heredoc(char *delim, int expand, t_list *env)
 {
-	char	*tmp;
+	char	*content;
 	char	*line;
 
+	content = NULL;
 	while (1)
 	{
 		line = readline("> ");
-		if (!ft_strcmp(line, heredoc) || !line || g_sig == -2)
+		if (!line || !ft_strcmp(line, delim) || g_sig == -2)
 		{
 			free(line);
 			break ;
 		}
 		if (expand && ft_strchr(line, '$'))
 			line = expand_variable(line, env, NULL);
-		tmp = ft_strjoin_free(tmp, line);
-		tmp = ft_strjoin_free(tmp, "\n");
-		if (line)
-			free(line);
+		content = ft_strjoin_free(content, line);
+		content = ft_strjoin_free(content, "\n");
+		free(line);
 	}
-	return (tmp);
+	return (content);
 }
 
-char	*ft_get_heredoc(char *heredoc, t_list *env)
+char	*get_heredoc(char *delim, t_list *env)
 {
-	char	*tmp;
+	char	*content;
 	int		expand;
 
-	if (!heredoc || g_sig == -2)
+	if (!delim || g_sig == -2)
 		return (NULL);
-	expand = 1;
-	if (ft_check_expand(heredoc))
-		expand = 0;
-	heredoc = ft_remove_quotes(heredoc);
-	tmp = ft_getline_h(heredoc, expand, env);
-	return (tmp);
+	expand = !needs_expansion(delim);
+	delim = strip_heredoc_quotes(delim);
+	content = read_heredoc(delim, expand, env);
+	return (content);
 }

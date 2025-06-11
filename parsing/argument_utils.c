@@ -12,7 +12,7 @@
 
 #include "../include/parser.h"
 
-char	*next_arg(char *cmd)
+char	*find_next_argument(char *cmd)
 {
 	int	i;
 	int	sq;
@@ -39,14 +39,14 @@ int	args_count(char *cmd)
 	count = 0;
 	while (*cmd)
 	{
-		if (!ft_strchr("\t |<>", cmd[0]))
+		if (!ft_strchr("\t |<>", *cmd))
 		{
 			count++;
-			cmd = next_arg(cmd);
+			cmd = find_next_argument(cmd);
 		}
-		else if (ft_strchr("><", cmd[0]))
+		else if (ft_strchr("><", *cmd))
 		{
-			while (ft_strchr("><", cmd[0]))
+			while (ft_strchr("><", *cmd))
 				cmd++;
 		}
 		else
@@ -55,7 +55,7 @@ int	args_count(char *cmd)
 	return (count);
 }
 
-int	ft_get_redir_file(char *input, t_cmd *cmd, t_redir_type type, t_list *env)
+int	extract_redir_file(char *input, t_cmd *cmd, t_redir_type type, t_list *env)
 {
 	char	*tmp;
 	int		i;
@@ -67,19 +67,19 @@ int	ft_get_redir_file(char *input, t_cmd *cmd, t_redir_type type, t_list *env)
 		free(cmd->redir_out.file);
 	else if ((type == REDIR_IN || type == HEREDOC) && cmd->redir_in.file)
 		free(cmd->redir_in.file);
-	tmp = ft_substr(input, 0, ft_strlen(input) - ft_strlen(next_arg(input)));
+	tmp = ft_substr(input, 0, ft_strlen(input) - ft_strlen(find_next_argument(input)));
 	if (type == REDIR_OUT || type == APPEND)
 	{
 		cmd->redir_out.file = remove_quotes(tmp);
-		i = ft_redir_open(cmd->redir_out.file, type);
+		i = open_redir_file(cmd->redir_out.file, type);
 	}
 	else if (type == REDIR_IN)
 	{
 		cmd->redir_in.file = remove_quotes(tmp);
-		i = ft_redir_open(cmd->redir_in.file, type);
+		i = open_redir_file(cmd->redir_in.file, type);
 	}
 	else if (type == HEREDOC)
-		cmd->redir_in.file = ft_get_heredoc(tmp, env);
+		cmd->redir_in.file = get_heredoc(tmp, env);
 	free(tmp);
 	return (i);
 }

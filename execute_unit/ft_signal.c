@@ -18,7 +18,7 @@ void	ft_handler(int sig)
 	if (g_sig > 0)
 	{
 		rl_on_new_line();
-		rl_replace_line("", 0);
+		// rl_replace_line("", 0);
 	}
 	else
 	{
@@ -29,7 +29,7 @@ void	ft_handler(int sig)
 		}
 		printf("\n");
 		rl_on_new_line();
-		rl_replace_line("", 0);
+		// rl_replace_line("", 0);
 		rl_redisplay();
 	}
 }

@@ -45,8 +45,7 @@ static int    check_quoted(t_cmd *cmd, int *status)
 		}
 		if (!cmd->next)
 			break ;
-		else
-			cmd = cmd->next;
+		cmd = cmd->next;
 	}
 	return (0);
 }

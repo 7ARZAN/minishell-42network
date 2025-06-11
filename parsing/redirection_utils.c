@@ -19,63 +19,61 @@ int	skip_wspace(char *input, int i)
 	return (i);
 }
 
-static t_redir_type	ft_check_outfile(char *input, int i)
+static t_redir_type	check_output_redir(char *input, int current)
 {
 	t_redir_type	type;
 
 	type = REDIR_OUT;
-	i++;
-	if (!input[i] || input[i++] == '>')
+	current++;
+	if (!input[current] || input[current++] == '>')
 		type = APPEND;
-	i = skip_wspace(input, i);
-	if (!input[i] || ft_strchr("<>|", input[i]))
+	current = skip_wspace(input, current);
+	if (!input[current] || ft_strchr("<>|", input[current]))
 		type = ERROR;
 	return (type);
 }
 
-static t_redir_type	ft_check_infile(char *input, int i)
+static t_redir_type	check_input_redir(char *input, int current)
 {
 	t_redir_type	type;
 
 	type = REDIR_IN;
-	i++;
-	if (!input[i] || input[i++] == '<')
+	current++;
+	if (!input[current] || input[current++] == '<')
 		type = HEREDOC;
-	i = skip_wspace(input, i);
-	if (!input[i] || ft_strchr("<>|", input[i]))
+	current = skip_wspace(input, current);
+	if (!input[current] || ft_strchr("<>|", input[current]))
 		type = ERROR;
 	return (type);
 }
 
 t_redir_type	get_redir_type(char *input)
 {
-	int				i;
-	t_redir_type	type;
+	int				current;
 
-	i = 0;
-	type = NONE;
-	while (input[i])
+	current = 0;
+	while (input[current])
 	{
-		if (input[i] == '>')
-			return (ft_check_outfile(input, i));
-		if (input[i] == '<')
-			return (ft_check_infile(input, i));
-		i++;
+		if (input[current] == '>')
+			return (check_output_redir(input, current));
+		if (input[current] == '<')
+			return (check_input_redir(input, current));
+		current++;
 	}
-	return (type);
+	return (NONE);
 }
 
-int	ft_redir_open(char *file, t_redir_type type)
+int	open_redir_file(char *filename, t_redir_type type)
 {
 	int	fd;
 
 	fd = 0;
 	if (type == REDIR_OUT)
-		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else if (type == APPEND)
-		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else if (type == REDIR_IN)
-		fd = open(file, O_RDONLY);
+		fd = open(filename, O_RDONLY);
 	if (fd != -1 && type != HEREDOC)
 		close(fd);
 	return (fd);
