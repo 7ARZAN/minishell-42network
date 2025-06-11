@@ -62,21 +62,41 @@ variable_expansion.c  command_parser.c  argument_splitter.c
 
 ```
 TuringSenkuShell/
-├── include/
-│   └── parser.h            # Header file with structures and prototypes
-├── src/
-│   ├── variable_expansion.c    # Handles $VAR and $? expansion
-│   ├── quote_removal.c         # Strips quotes from input
-│   ├── command_parser.c        # Parses input into command structures
-│   ├── argument_splitter.c     # Splits commands into arguments/redirections
-│   ├── heredoc_handler.c       # Processes heredoc input
-│   ├── redirection_utils.c     # Manages redirections (>, <, >>, <<)
-│   ├── command_splitter.c      # Splits input by pipes
-│   ├── command_struct.c        # Command structure utilities
-│   ├── argument_utils.c        # Argument splitting helper functions
-│   └── main.c                  # Entry point
-├── Makefile                    # Build configuration
-└── README.md                   # Project documentation
+├── Makefile
+├── README.md
+├── builting
+│   ├── ft_cd.c
+│   ├── ft_echo.c
+│   ├── ft_env.c
+│   ├── ft_exit.c
+│   ├── ft_export.c
+│   ├── ft_pwd.c
+│   └── ft_unset.c
+├── execute_unit
+│   ├── ft_dupenvp.c
+│   ├── ft_execute.c
+│   ├── ft_is_builting.c
+│   ├── ft_pipe.c
+│   ├── ft_redirection.c
+│   ├── ft_search_path.c
+│   └── ft_signal.c
+├── include
+│   ├── builting.h
+│   ├── execute.h
+│   ├── libft.h
+│   ├── minishell.h
+│   └── parser.h
+├── main.c
+└── parsing
+    ├── argument_splitter.c
+    ├── argument_utils.c
+    ├── command_splitter.c
+    ├── heredoc_handler.c
+    ├── parser.c
+    ├── quote_removal.c
+    ├── redirection_utils.c
+    ├── struct_cmd.c
+    └── variable_expansion.c
 ```
 
 ## 💡 Inspiration
